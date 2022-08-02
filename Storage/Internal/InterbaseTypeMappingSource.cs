@@ -203,5 +203,5 @@ public class InterbaseTypeMappingSource : RelationalTypeMappingSource
 
 	public static bool IsUnicode(RelationalTypeMapping mapping) => IsUnicode(mapping?.IsUnicode);
 	public static bool IsUnicode(RelationalTypeMappingInfo mappingInfo) => IsUnicode(mappingInfo.IsUnicode);
-	public static bool IsUnicode(bool? isUnicode) => isUnicode ?? true;
+	public static bool IsUnicode(bool? isUnicode) => true || (isUnicode ?? true);
 }

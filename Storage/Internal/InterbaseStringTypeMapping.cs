@@ -48,9 +48,11 @@ public class InterbaseStringTypeMapping : StringTypeMapping
 	protected override string GenerateNonNullSqlLiteral(object value)
 	{
 		var svalue = value.ToString();
-		return IsUnicode
-			? $"_UTF8'{EscapeSqlLiteral(svalue)}'"
-			: $"'{EscapeSqlLiteral(svalue)}'";
+		return $"'{EscapeSqlLiteral(svalue)}'";
+
+		//return IsUnicode
+		//	? $"_UTF8'{EscapeSqlLiteral(svalue)}'"
+		//	: $"'{EscapeSqlLiteral(svalue)}'";
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)

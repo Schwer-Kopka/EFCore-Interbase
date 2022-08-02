@@ -44,22 +44,38 @@ public class InterbaseStringContainsTranslator : IMethodCallTranslator
 			return null;
 
 		var patternExpression = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
-		var positionExpression = _interbaseSqlExpressionFactory.GreaterThan(
-			_interbaseSqlExpressionFactory.Function(
-				"POSITION",
-				new[] { patternExpression, instance },
-				true,
-				new[] { true, true },
-				typeof(int)),
-			_interbaseSqlExpressionFactory.Constant(0));
-		return patternExpression is SqlConstantExpression sqlConstantExpression
-			? ((string)sqlConstantExpression.Value)?.Length == 0
+
+		var containsExpression = _interbaseSqlExpressionFactory.Like(
+			instance,
+			_interbaseSqlExpressionFactory.Add(
+				_interbaseSqlExpressionFactory.Add(
+					_interbaseSqlExpressionFactory.Constant("%"),
+					patternExpression
+				),
+				_interbaseSqlExpressionFactory.Constant("%")
+			)
+		);
+
+		if (patternExpression is SqlConstantExpression sqlConstantExpression)
+		{
+			if (sqlConstantExpression.Value is null)
+			{
+				throw new System.ArgumentNullException();
+			}
+
+			return (string)sqlConstantExpression.Value == string.Empty
 				? (SqlExpression)_interbaseSqlExpressionFactory.Constant(true)
-				: positionExpression
-			: _interbaseSqlExpressionFactory.OrElse(
-				positionExpression,
+				: containsExpression;
+		}
+		else
+		{
+			return _interbaseSqlExpressionFactory.OrElse(
+				containsExpression,
 				_interbaseSqlExpressionFactory.Equal(
 					patternExpression,
-					_interbaseSqlExpressionFactory.Constant(string.Empty)));
+					_interbaseSqlExpressionFactory.Constant(string.Empty)
+				)
+			);
+		}
 	}
 }

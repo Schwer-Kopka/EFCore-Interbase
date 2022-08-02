@@ -44,33 +44,35 @@ public class InterbaseStringStartsWithTranslator : IMethodCallTranslator
 			return null;
 
 		var patternExpression = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
-		var startsWithExpression = _interbaseSqlExpressionFactory.AndAlso(
-			_interbaseSqlExpressionFactory.Like(
-				instance,
-				_interbaseSqlExpressionFactory.Add(patternExpression, _interbaseSqlExpressionFactory.Constant("%"))),
-			_interbaseSqlExpressionFactory.Equal(
-				_interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.Function(
-					"LEFT",
-					new[] {
-							instance,
-							_interbaseSqlExpressionFactory.Function(
-								"CHAR_LENGTH",
-								new[] { patternExpression },
-								true,
-								new[] { true },
-								typeof(int)) },
-					true,
-					new[] { true, true },
-					instance.Type)),
-				patternExpression));
-		return patternExpression is SqlConstantExpression sqlConstantExpression
-			? (string)sqlConstantExpression.Value == string.Empty
+
+		var startsWithExpression = _interbaseSqlExpressionFactory.Like(
+			instance,
+			_interbaseSqlExpressionFactory.Add(
+				patternExpression,
+				_interbaseSqlExpressionFactory.Constant("%")
+			)
+		);
+
+		if (patternExpression is SqlConstantExpression sqlConstantExpression)
+		{
+			if (sqlConstantExpression.Value is null)
+			{
+				throw new System.ArgumentNullException();
+			}
+
+			return (string)sqlConstantExpression.Value == string.Empty
 				? (SqlExpression)_interbaseSqlExpressionFactory.Constant(true)
-				: startsWithExpression
-			: _interbaseSqlExpressionFactory.OrElse(
+				: startsWithExpression;
+		}
+		else
+		{
+			return _interbaseSqlExpressionFactory.OrElse(
 				startsWithExpression,
 				_interbaseSqlExpressionFactory.Equal(
 					patternExpression,
-					_interbaseSqlExpressionFactory.Constant(string.Empty)));
+					_interbaseSqlExpressionFactory.Constant(string.Empty)
+				)
+			);
+		}
 	}
 }

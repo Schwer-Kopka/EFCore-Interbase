@@ -44,29 +44,35 @@ class InterbaseStringEndsWithTranslator : IMethodCallTranslator
 			return null;
 
 		var patternExpression = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
-		var endsWithExpression = _interbaseSqlExpressionFactory.Equal(
-			_interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.Function(
-					"RIGHT",
-					new[] {
-							instance,
-							_interbaseSqlExpressionFactory.Function(
-								"CHAR_LENGTH",
-								new[] { patternExpression },
-								true,
-								new[] { true },
-								typeof(int)) },
-					true,
-					new[] { true, true },
-					instance.Type)),
-			patternExpression);
-		return patternExpression is SqlConstantExpression sqlConstantExpression
-			? (string)sqlConstantExpression.Value == string.Empty
+
+		var endsWithExpression = _interbaseSqlExpressionFactory.Like(
+			instance,
+			_interbaseSqlExpressionFactory.Add(
+				_interbaseSqlExpressionFactory.Constant("%"),
+				patternExpression
+			)
+		);
+
+		if (patternExpression is SqlConstantExpression sqlConstantExpression)
+		{
+			if (sqlConstantExpression.Value is null)
+			{
+				throw new System.ArgumentNullException();
+			}
+
+			return (string)sqlConstantExpression.Value == string.Empty
 				? (SqlExpression)_interbaseSqlExpressionFactory.Constant(true)
-				: endsWithExpression
-			: _interbaseSqlExpressionFactory.OrElse(
+				: endsWithExpression;
+		}
+		else
+		{
+			return _interbaseSqlExpressionFactory.OrElse(
 				endsWithExpression,
 				_interbaseSqlExpressionFactory.Equal(
 					patternExpression,
-					_interbaseSqlExpressionFactory.Constant(string.Empty)));
+					_interbaseSqlExpressionFactory.Constant(string.Empty)
+				)
+			);
+		}
 	}
 }

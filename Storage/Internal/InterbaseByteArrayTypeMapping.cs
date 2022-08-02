@@ -34,7 +34,8 @@ public class InterbaseByteArrayTypeMapping : ByteArrayTypeMapping
 
 	protected override string GenerateNonNullSqlLiteral(object value)
 	{
-		var hex = ((byte[])value).ToHexString();
+		var ba = (byte[])value;
+		var hex = BitConverter.ToString(ba).Replace("-", string.Empty);
 		return $"x'{hex}'";
 	}
 

@@ -34,22 +34,22 @@ public class InterbaseConventionSetBuilder : RelationalConventionSetBuilder
 	{
 		var conventionSet = base.CreateConventionSet();
 
-		var valueGenerationStrategyConvention = new InterbaseValueGenerationStrategyConvention(Dependencies, RelationalDependencies);
-		conventionSet.ModelInitializedConventions.Add(valueGenerationStrategyConvention);
-		conventionSet.ModelInitializedConventions.Add(new RelationalMaxIdentifierLengthConvention(31, Dependencies, RelationalDependencies));
+		//var valueGenerationStrategyConvention = new InterbaseValueGenerationStrategyConvention(Dependencies, RelationalDependencies);
+		//conventionSet.ModelInitializedConventions.Add(valueGenerationStrategyConvention);
+		//conventionSet.ModelInitializedConventions.Add(new RelationalMaxIdentifierLengthConvention(31, Dependencies, RelationalDependencies));
 
-		var valueGenerationConvention = new InterbaseValueGenerationConvention(Dependencies, RelationalDependencies);
-		ReplaceConvention(conventionSet.EntityTypeBaseTypeChangedConventions, valueGenerationConvention);
-		ReplaceConvention(conventionSet.EntityTypePrimaryKeyChangedConventions, valueGenerationConvention);
-		ReplaceConvention(conventionSet.ForeignKeyAddedConventions, valueGenerationConvention);
-		ReplaceConvention(conventionSet.ForeignKeyRemovedConventions, valueGenerationConvention);
+		//var valueGenerationConvention = new InterbaseValueGenerationConvention(Dependencies, RelationalDependencies);
+		//ReplaceConvention(conventionSet.EntityTypeBaseTypeChangedConventions, valueGenerationConvention);
+		//ReplaceConvention(conventionSet.EntityTypePrimaryKeyChangedConventions, valueGenerationConvention);
+		//ReplaceConvention(conventionSet.ForeignKeyAddedConventions, valueGenerationConvention);
+		//ReplaceConvention(conventionSet.ForeignKeyRemovedConventions, valueGenerationConvention);
 
-		var storeGenerationConvention = new InterbaseStoreGenerationConvention(Dependencies, RelationalDependencies);
-		ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, storeGenerationConvention);
-		ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, (RelationalValueGenerationConvention)valueGenerationConvention);
+		//var storeGenerationConvention = new InterbaseStoreGenerationConvention(Dependencies, RelationalDependencies);
+		//ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, storeGenerationConvention);
+		//ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, (RelationalValueGenerationConvention)valueGenerationConvention);
 
-		conventionSet.ModelFinalizingConventions.Add(valueGenerationStrategyConvention);
-		ReplaceConvention(conventionSet.ModelFinalizingConventions, storeGenerationConvention);
+		//conventionSet.ModelFinalizingConventions.Add(valueGenerationStrategyConvention);
+		//ReplaceConvention(conventionSet.ModelFinalizingConventions, storeGenerationConvention);
 
 		return conventionSet;
 	}

@@ -310,7 +310,9 @@ public class InterbaseMigrationsSqlGenerator : MigrationsSqlGenerator
 		if (Options.HasFlag(MigrationsSqlGenerationOptions.Script))
 			throw new NotSupportedException("Creating database from script is not supported.");
 
-		InterbaseConnection.CreateDatabase(operation.ConnectionString);
+		// TODO: Currently not implemented in our custom ADO.NET driver
+		//InterbaseConnection.CreateDatabase(operation.ConnectionString);
+		throw new NotImplementedException();
 	}
 
 	public virtual void Generate(InterbaseDropDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
@@ -318,8 +320,10 @@ public class InterbaseMigrationsSqlGenerator : MigrationsSqlGenerator
 		if (Options.HasFlag(MigrationsSqlGenerationOptions.Script))
 			throw new NotSupportedException("Dropping database from script is not supported.");
 
-		InterbaseConnection.ClearPool(operation.ConnectionString);
-		InterbaseConnection.DropDatabase(operation.ConnectionString);
+		// TODO: Currently not implemented in our custom ADO.NET driver
+		//InterbaseConnection.ClearPool(operation.ConnectionString);
+		//InterbaseConnection.DropDatabase(operation.ConnectionString);
+		throw new NotImplementedException();
 	}
 
 	protected override void ColumnDefinition(string schema, string table, string name, ColumnOperation operation, IModel model, MigrationCommandListBuilder builder)

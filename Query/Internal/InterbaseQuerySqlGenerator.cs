@@ -135,6 +135,15 @@ public class InterbaseQuerySqlGenerator : QuerySqlGenerator
 		{
 			Sql.Append("CAST(");
 		}
+
+		// FIX: Replace "WHERE TRUE" and "WHERE FALSE" with "WHERE 1=1" and "WHERE 1=0"
+		// as the former constant boolean values are not supported by Interbase.
+		if (sqlConstantExpression.TypeMapping is InterbaseBoolTypeMapping && Sql.ToString().EndsWith("WHERE "))
+		{
+			var mapping = new InterbaseBoolTypeMapping() { IsUsedAsSingleConstantConditionInWherePart = true };
+			sqlConstantExpression = (SqlConstantExpression)sqlConstantExpression.ApplyTypeMapping(mapping);
+		}
+
 		base.VisitSqlConstant(sqlConstantExpression);
 		if (shouldExplicitStringLiteralTypes)
 		{

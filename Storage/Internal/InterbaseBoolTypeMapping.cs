@@ -23,6 +23,8 @@ namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
 public class InterbaseBoolTypeMapping : BoolTypeMapping
 {
+	public bool IsUsedAsSingleConstantConditionInWherePart { get; set; } = false;
+
 	public InterbaseBoolTypeMapping()
 		: base("BOOLEAN", System.Data.DbType.Boolean)
 	{ }
@@ -33,9 +35,19 @@ public class InterbaseBoolTypeMapping : BoolTypeMapping
 
 	protected override string GenerateNonNullSqlLiteral(object value)
 	{
+		if (IsUsedAsSingleConstantConditionInWherePart)
+		{
+			return (bool)value ? "1=1" : "1=0";
+		}
+		else
+		{
 		return (bool)value ? "TRUE" : "FALSE";
+	}
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-		=> new InterbaseBoolTypeMapping(parameters);
+		=> new InterbaseBoolTypeMapping(parameters)
+			{
+				IsUsedAsSingleConstantConditionInWherePart = IsUsedAsSingleConstantConditionInWherePart
+			};
 }

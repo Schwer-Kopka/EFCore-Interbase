@@ -27,23 +27,26 @@ namespace SK.EntityFrameworkCore.Interbase.Internal;
 
 public class InterbaseOptions : IInterbaseOptions
 {
+	private const bool Default_ExplicitParameterTypes = false;
+	private const bool Default_ExplicitStringLiteralTypes = false;
+
 	public virtual void Initialize(IDbContextOptions options)
 	{
 		var interbaseOptions = options.FindExtension<InterbaseOptionsExtension>() ?? new InterbaseOptionsExtension();
 
-		ExplicitParameterTypes = interbaseOptions.ExplicitParameterTypes ?? true;
-		ExplicitStringLiteralTypes = interbaseOptions.ExplicitStringLiteralTypes ?? true;
+		ExplicitParameterTypes = interbaseOptions.ExplicitParameterTypes ?? Default_ExplicitParameterTypes;
+		ExplicitStringLiteralTypes = interbaseOptions.ExplicitStringLiteralTypes ?? Default_ExplicitStringLiteralTypes;
 	}
 
 	public virtual void Validate(IDbContextOptions options)
 	{
 		var interbaseOptions = options.FindExtension<InterbaseOptionsExtension>() ?? new InterbaseOptionsExtension();
 
-		if (ExplicitParameterTypes != (interbaseOptions.ExplicitParameterTypes ?? true))
+		if (ExplicitParameterTypes != (interbaseOptions.ExplicitParameterTypes ?? Default_ExplicitParameterTypes))
 		{
 			throw new InvalidOperationException($"A call was made to '{nameof(InterbaseDbContextOptionsBuilder.WithExplicitParameterTypes)}' that changed an option that must be constant within a service provider, but Entity Framework is not building its own internal service provider. Either allow EF to build the service provider by removing the call to '{nameof(DbContextOptionsBuilder.UseInternalServiceProvider)}', or ensure that the configuration for '{nameof(InterbaseDbContextOptionsBuilder.WithExplicitParameterTypes)}' does not change for all uses of a given service provider passed to '{nameof(DbContextOptionsBuilder.UseInternalServiceProvider)}'.");
 		}
-		if (ExplicitStringLiteralTypes != (interbaseOptions.ExplicitStringLiteralTypes ?? true))
+		if (ExplicitStringLiteralTypes != (interbaseOptions.ExplicitStringLiteralTypes ?? Default_ExplicitStringLiteralTypes))
 		{
 			throw new InvalidOperationException($"A call was made to '{nameof(InterbaseDbContextOptionsBuilder.WithExplicitStringLiteralTypes)}' that changed an option that must be constant within a service provider, but Entity Framework is not building its own internal service provider. Either allow EF to build the service provider by removing the call to '{nameof(DbContextOptionsBuilder.UseInternalServiceProvider)}', or ensure that the configuration for '{nameof(InterbaseDbContextOptionsBuilder.WithExplicitStringLiteralTypes)}' does not change for all uses of a given service provider passed to '{nameof(DbContextOptionsBuilder.UseInternalServiceProvider)}'.");
 		}

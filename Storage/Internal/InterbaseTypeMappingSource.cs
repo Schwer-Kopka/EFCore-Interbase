@@ -103,11 +103,11 @@ public class InterbaseTypeMappingSource : RelationalTypeMappingSource
 
 		_disallowedMappings = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
 			{
-					"CHARACTER",
-					"CHAR",
-					"VARCHAR",
-					"CHARACTER VARYING",
-					"CHAR VARYING",
+				"CHARACTER",
+				"CHAR",
+				"VARCHAR",
+				"CHARACTER VARYING",
+				"CHAR VARYING",
 			};
 	}
 

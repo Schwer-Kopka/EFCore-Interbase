@@ -97,15 +97,15 @@ public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 
 	private const string GetTablesQuery =
 		@"SELECT
-                trim(r.RDB$RELATION_NAME),
-                r.RDB$DESCRIPTION,
-                r.RDB$RELATION_TYPE
-              FROM
-               RDB$RELATIONS r
-             WHERE
-              r.RDB$SYSTEM_FLAG is distinct from 1
-             ORDER BY
-              r.RDB$RELATION_NAME";
+				trim(r.RDB$RELATION_NAME),
+				r.RDB$DESCRIPTION,
+				r.RDB$RELATION_TYPE
+			  FROM
+			   RDB$RELATIONS r
+			 WHERE
+			  r.RDB$SYSTEM_FLAG is distinct from 1
+			 ORDER BY
+			  r.RDB$RELATION_NAME";
 
 	private IEnumerable<DatabaseTable> GetTables(DbConnection connection, Func<string, string, bool> filter)
 	{
@@ -147,20 +147,20 @@ public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 
 	private const string GetColumnsQuery =
 		@"SELECT
-               trim(RF.RDB$FIELD_NAME) as COLUMN_NAME,
-               COALESCE(RF.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT,
-               COALESCE(RF.RDB$NULL_FLAG, 0)  as NOT_NULL,
-               CASE Coalesce(F.RDB$FIELD_TYPE, 0)
-                WHEN 7 THEN
-                 CASE F.RDB$FIELD_SUB_TYPE
-                  WHEN 0 THEN 'SMALLINT'
-                  ELSE 'DECIMAL'
-                 END
-                WHEN 8 THEN
-                 CASE F.RDB$FIELD_SUB_TYPE
-                  WHEN 0 THEN 'INTEGER'
-                  ELSE 'DECIMAL'
-                 END
+			   trim(RF.RDB$FIELD_NAME) as COLUMN_NAME,
+			   COALESCE(RF.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT,
+			   COALESCE(RF.RDB$NULL_FLAG, 0)  as NOT_NULL,
+			   CASE Coalesce(F.RDB$FIELD_TYPE, 0)
+				WHEN 7 THEN
+				 CASE F.RDB$FIELD_SUB_TYPE
+				  WHEN 0 THEN 'SMALLINT'
+				  ELSE 'DECIMAL'
+				 END
+				WHEN 8 THEN
+				 CASE F.RDB$FIELD_SUB_TYPE
+				  WHEN 0 THEN 'INTEGER'
+				  ELSE 'DECIMAL'
+				 END
 				WHEN 9 THEN 'QUAD'
 				WHEN 10 THEN 'FLOAT'
 				WHEN 12 THEN 'DATE'
@@ -185,18 +185,18 @@ public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 				  END
 				ELSE 'RDB$FIELD_TYPE: ' || F.RDB$FIELD_TYPE || '?'
 			   END as STORE_TYPE,
-               F.rdb$description as COLUMN_COMMENT,
-               COALESCE({1}, 0)   as AUTO_GENERATED,
-               ch.RDB$CHARACTER_SET_NAME as CHARACTER_SET_NAME
-              FROM
-               RDB$RELATION_FIELDS RF
-               JOIN  RDB$FIELDS F ON(F.RDB$FIELD_NAME = RF.RDB$FIELD_SOURCE)
-               LEFT OUTER JOIN  RDB$CHARACTER_SETS CH ON(CH.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID)
-              WHERE
-               trim(RF.RDB$RELATION_NAME) = '" + "{0}" + @"'
-               AND COALESCE(RF.RDB$SYSTEM_FLAG, 0) = 0
-             ORDER BY
-              RF.RDB$FIELD_POSITION;";
+			   F.rdb$description as COLUMN_COMMENT,
+			   COALESCE({1}, 0)   as AUTO_GENERATED,
+			   ch.RDB$CHARACTER_SET_NAME as CHARACTER_SET_NAME
+			  FROM
+			   RDB$RELATION_FIELDS RF
+			   JOIN  RDB$FIELDS F ON(F.RDB$FIELD_NAME = RF.RDB$FIELD_SOURCE)
+			   LEFT OUTER JOIN  RDB$CHARACTER_SETS CH ON(CH.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID)
+			  WHERE
+			   trim(RF.RDB$RELATION_NAME) = '" + "{0}" + @"'
+			   AND COALESCE(RF.RDB$SYSTEM_FLAG, 0) = 0
+			 ORDER BY
+			  RF.RDB$FIELD_POSITION;";
 
 	private void GetColumns(DbConnection connection, IReadOnlyList<DatabaseTable> tables, Func<string, string, bool> tableFilter)
 	{
@@ -264,16 +264,16 @@ public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 
 	private const string GetPrimaryQuery =
 	@"SELECT
-           trim(i.rdb$index_name) as INDEX_NAME,
-           trim(sg.rdb$field_name) as FIELD_NAME
-          FROM
-           RDB$INDICES i
-           LEFT JOIN rdb$index_segments sg on i.rdb$index_name = sg.rdb$index_name
-           LEFT JOIN rdb$relation_constraints rc on rc.rdb$index_name = I.rdb$index_name
-          WHERE
-           rc.rdb$constraint_type = 'PRIMARY KEY'
-           AND trim(i.rdb$relation_name) = '{0}'
-          ORDER BY sg.RDB$FIELD_POSITION;";
+		   trim(i.rdb$index_name) as INDEX_NAME,
+		   trim(sg.rdb$field_name) as FIELD_NAME
+		  FROM
+		   RDB$INDICES i
+		   LEFT JOIN rdb$index_segments sg on i.rdb$index_name = sg.rdb$index_name
+		   LEFT JOIN rdb$relation_constraints rc on rc.rdb$index_name = I.rdb$index_name
+		  WHERE
+		   rc.rdb$constraint_type = 'PRIMARY KEY'
+		   AND trim(i.rdb$relation_name) = '{0}'
+		  ORDER BY sg.RDB$FIELD_POSITION;";
 
 	private void GetPrimaryKeys(DbConnection connection, IReadOnlyList<DatabaseTable> tables)
 	{
@@ -306,17 +306,17 @@ public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 
 	private const string GetIndexesQuery =
 		@"SELECT
-               trim(I.rdb$index_name) as INDEX_NAME,
-               COALESCE(I.rdb$unique_flag, 0) as IS_UNIQUE,
-               list(trim(sg.RDB$FIELD_NAME)) as COLUMNS
-              FROM
-               RDB$INDICES i
-               LEFT JOIN rdb$index_segments sg on i.rdb$index_name = sg.rdb$index_name
-               LEFT JOIN rdb$relation_constraints rc on rc.rdb$index_name = I.rdb$index_name and rc.rdb$constraint_type = null
-              WHERE
-               trim(i.rdb$relation_name) = '{0}'
-              GROUP BY
-               INDEX_NAME, IS_UNIQUE ;";
+			   trim(I.rdb$index_name) as INDEX_NAME,
+			   COALESCE(I.rdb$unique_flag, 0) as IS_UNIQUE,
+			   list(trim(sg.RDB$FIELD_NAME)) as COLUMNS
+			  FROM
+			   RDB$INDICES i
+			   LEFT JOIN rdb$index_segments sg on i.rdb$index_name = sg.rdb$index_name
+			   LEFT JOIN rdb$relation_constraints rc on rc.rdb$index_name = I.rdb$index_name and rc.rdb$constraint_type = null
+			  WHERE
+			   trim(i.rdb$relation_name) = '{0}'
+			  GROUP BY
+			   INDEX_NAME, IS_UNIQUE ;";
 
 	/// <remarks>
 	/// Primary keys are handled as in <see cref="GetConstraints"/>, not here
@@ -354,23 +354,23 @@ public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 
 	private const string GetConstraintsQuery =
 		@"SELECT
-               trim(drs.rdb$constraint_name) as CONSTRAINT_NAME,
-               trim(drs.RDB$RELATION_NAME) as TABLE_NAME,
-               trim(mrc.rdb$relation_name) AS REFERENCED_TABLE_NAME,
-               (select list(trim(di.rdb$field_name)||'|'||trim(mi.rdb$field_name))
-                from
-                 rdb$index_segments di
-                 join rdb$index_segments mi on mi.RDB$FIELD_POSITION=di.RDB$FIELD_POSITION and mi.rdb$index_name = mrc.rdb$index_name
-                where
-                 di.rdb$index_name = drs.rdb$index_name) as PAIRED_COLUMNS,
-               trim(rc.RDB$DELETE_RULE) as DELETE_RULE
-              FROM
-               rdb$relation_constraints drs
-               left JOIN rdb$ref_constraints rc ON drs.rdb$constraint_name = rc.rdb$constraint_name
-               left JOIN rdb$relation_constraints mrc ON rc.rdb$const_name_uq = mrc.rdb$constraint_name
-              WHERE
-               drs.rdb$constraint_type = 'FOREIGN KEY'
-               AND trim(drs.RDB$RELATION_NAME) = '{0}' ";
+			   trim(drs.rdb$constraint_name) as CONSTRAINT_NAME,
+			   trim(drs.RDB$RELATION_NAME) as TABLE_NAME,
+			   trim(mrc.rdb$relation_name) AS REFERENCED_TABLE_NAME,
+			   (select list(trim(di.rdb$field_name)||'|'||trim(mi.rdb$field_name))
+				from
+				 rdb$index_segments di
+				 join rdb$index_segments mi on mi.RDB$FIELD_POSITION=di.RDB$FIELD_POSITION and mi.rdb$index_name = mrc.rdb$index_name
+				where
+				 di.rdb$index_name = drs.rdb$index_name) as PAIRED_COLUMNS,
+			   trim(rc.RDB$DELETE_RULE) as DELETE_RULE
+			  FROM
+			   rdb$relation_constraints drs
+			   left JOIN rdb$ref_constraints rc ON drs.rdb$constraint_name = rc.rdb$constraint_name
+			   left JOIN rdb$relation_constraints mrc ON rc.rdb$const_name_uq = mrc.rdb$constraint_name
+			  WHERE
+			   drs.rdb$constraint_type = 'FOREIGN KEY'
+			   AND trim(drs.RDB$RELATION_NAME) = '{0}' ";
 
 	private void GetConstraints(DbConnection connection, IReadOnlyList<DatabaseTable> tables)
 	{

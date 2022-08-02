@@ -28,8 +28,8 @@ namespace SK.EntityFrameworkCore.Interbase.Update.Internal;
 
 public class InterbaseUpdateSqlGenerator : UpdateSqlGenerator, IInterbaseUpdateSqlGenerator
 {
-    public InterbaseUpdateSqlGenerator(UpdateSqlGeneratorDependencies dependencies)
-        : base(dependencies)
+	public InterbaseUpdateSqlGenerator(UpdateSqlGeneratorDependencies dependencies)
+		: base(dependencies)
 	{ }
 
 	protected override void AppendIdentityWhereCondition(StringBuilder commandStringBuilder, IColumnModification columnModification)

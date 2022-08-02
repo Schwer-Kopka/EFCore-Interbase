@@ -34,5 +34,5 @@ public class InterbaseQuerySqlGeneratorFactory : IQuerySqlGeneratorFactory
 	}
 
 	public QuerySqlGenerator Create()
-		  => new InterbaseQuerySqlGenerator(_dependencies, _interbaseOptions);
+		=> new InterbaseQuerySqlGenerator(_dependencies, _interbaseOptions);
 }

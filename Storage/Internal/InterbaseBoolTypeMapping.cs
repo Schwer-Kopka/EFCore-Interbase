@@ -41,8 +41,8 @@ public class InterbaseBoolTypeMapping : BoolTypeMapping
 		}
 		else
 		{
-		return (bool)value ? "TRUE" : "FALSE";
-	}
+			return (bool)value ? "TRUE" : "FALSE";
+		}
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)

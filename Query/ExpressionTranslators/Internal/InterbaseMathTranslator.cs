@@ -151,7 +151,7 @@ public class InterbaseMathTranslator : IMethodCallTranslator
 					_interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]),
 					typeof(int)
 				);
-		}
+			}
 			else if (arguments.Count == 2)
 			{
 				// for two arguments we can use `CAST(num as NUMERIC(12, <precision>))`

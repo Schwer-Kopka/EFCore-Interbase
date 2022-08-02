@@ -21,6 +21,7 @@ using System;
 using System.Data.Common;
 using SK.EntityFrameworkCore.Interbase.Infrastructure;
 using SK.EntityFrameworkCore.Interbase.Infrastructure.Internal;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ public static class InterbaseDbContextOptionsBuilderExtensions
 	{
 		var extension = (InterbaseOptionsExtension)GetOrCreateExtension(optionsBuilder).WithConnectionString(connectionString);
 		((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(extension);
+		ConfigureWarnings(optionsBuilder);
 		interbaseOptionsAction?.Invoke(new InterbaseDbContextOptionsBuilder(optionsBuilder));
 		return optionsBuilder;
 	}
@@ -39,6 +41,7 @@ public static class InterbaseDbContextOptionsBuilderExtensions
 	{
 		var extension = (InterbaseOptionsExtension)GetOrCreateExtension(optionsBuilder).WithConnection(connection);
 		((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(extension);
+		ConfigureWarnings(optionsBuilder);
 		interbaseOptionsAction?.Invoke(new InterbaseDbContextOptionsBuilder(optionsBuilder));
 		return optionsBuilder;
 	}
@@ -58,4 +61,17 @@ public static class InterbaseDbContextOptionsBuilderExtensions
 	static InterbaseOptionsExtension GetOrCreateExtension(DbContextOptionsBuilder optionsBuilder)
 		=> optionsBuilder.Options.FindExtension<InterbaseOptionsExtension>()
 			?? new InterbaseOptionsExtension();
+
+	private static void ConfigureWarnings(DbContextOptionsBuilder optionsBuilder)
+	{
+		var coreOptionsExtension
+			= optionsBuilder.Options.FindExtension<CoreOptionsExtension>()
+			  ?? new CoreOptionsExtension();
+
+		coreOptionsExtension = coreOptionsExtension.WithWarningsConfiguration(
+			coreOptionsExtension.WarningsConfiguration.TryWithExplicit(
+				RelationalEventId.AmbientTransactionWarning, WarningBehavior.Throw));
+
+		((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(coreOptionsExtension);
+	}
 }

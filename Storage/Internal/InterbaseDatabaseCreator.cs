@@ -40,22 +40,15 @@ public class InterbaseDatabaseCreator : RelationalDatabaseCreator
 
 	public override void Create()
 	{
-		InterbaseConnection.CreateDatabase(_connection.ConnectionString);
-	}
-	public override Task CreateAsync(CancellationToken cancellationToken = default)
-	{
-		return InterbaseConnection.CreateDatabaseAsync(_connection.ConnectionString, cancellationToken: cancellationToken);
+		throw new NotImplementedException();
+		//InterbaseConnection.CreateDatabase(_connection.ConnectionString);
 	}
 
 	public override void Delete()
 	{
-		InterbaseConnection.ClearPool((InterbaseConnection)_connection.DbConnection);
-		InterbaseConnection.DropDatabase(_connection.ConnectionString);
-	}
-	public override Task DeleteAsync(CancellationToken cancellationToken = default)
-	{
-		InterbaseConnection.ClearPool((InterbaseConnection)_connection.DbConnection);
-		return InterbaseConnection.DropDatabaseAsync(_connection.ConnectionString, cancellationToken);
+		throw new NotImplementedException();
+		//InterbaseConnection.ClearPool((InterbaseConnection)_connection.DbConnection);
+		//InterbaseConnection.DropDatabase(_connection.ConnectionString);
 	}
 
 	public override bool Exists()

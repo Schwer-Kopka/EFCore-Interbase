@@ -53,8 +53,10 @@ public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 			connection.Open();
 		}
 
-		var serverVersion = InterbaseServerProperties.ParseServerVersion(connection.ServerVersion);
-		MajorVersionNumber = serverVersion.Major;
+		// TODO: Not implemented in custom ADO.NET driver yet!
+		//var serverVersion = InterbaseServerProperties.ParseServerVersion(connection.ServerVersion);
+		//MajorVersionNumber = serverVersion.Major;
+		MajorVersionNumber = 3;
 
 		try
 		{

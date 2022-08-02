@@ -40,7 +40,7 @@ public class InterbaseDateTimeNowTodayTranslator : IMemberTranslator
 	{
 		if (member.DeclaringType == typeof(DateTime) && member.Name == nameof(DateTime.Now))
 		{
-			return _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.NiladicFunction("LOCALTIMESTAMP", false, typeof(DateTime)));
+			return _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.NiladicFunction("CURRENT_TIMESTAMP", false, typeof(DateTime)));
 		}
 		if (member.DeclaringType == typeof(DateTime) && member.Name == nameof(DateTime.Today))
 		{

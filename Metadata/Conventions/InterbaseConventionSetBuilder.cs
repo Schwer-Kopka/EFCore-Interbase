@@ -56,7 +56,7 @@ public class InterbaseConventionSetBuilder : RelationalConventionSetBuilder
 	{
 		var serviceProvider = new ServiceCollection()
 			.AddEntityFrameworkInterbase()
-			.AddDbContext<DbContext>(o => o.UseInterbase("database=localhost:_.fdb;user=sysdba;password=masterkey;charset=utf8"))
+			.AddDbContext<DbContext>(o => o.UseInterbase("database=localhost:_.ib;user=sysdba;password=masterkey;charset=utf8"))
 			.BuildServiceProvider();
 
 		using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,28 +17,28 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringToLowerTranslator : IMethodCallTranslator
+public class InterbaseStringToLowerTranslator : IMethodCallTranslator
 {
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringToLowerTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringToLowerTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 	{
 		if (method.DeclaringType == typeof(string) && method.Name == nameof(string.ToLower))
 		{
-			return _fbSqlExpressionFactory.Function("LOWER", new[] { instance }, true, new[] { true }, typeof(string));
+			return _interbaseSqlExpressionFactory.Function("LOWER", new[] { instance }, true, new[] { true }, typeof(string));
 		}
 		return null;
 	}

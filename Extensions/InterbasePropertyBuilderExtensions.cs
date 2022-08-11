@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -15,18 +15,18 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata;
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Internal;
+using SK.EntityFrameworkCore.Interbase.Metadata;
+using SK.EntityFrameworkCore.Interbase.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Microsoft.EntityFrameworkCore;
 
-public static class FbPropertyBuilderExtensions
+public static class InterbasePropertyBuilderExtensions
 {
 	public static PropertyBuilder UseIdentityColumn(this PropertyBuilder propertyBuilder)
 	{
 		var property = propertyBuilder.Metadata;
-		property.SetValueGenerationStrategy(FbValueGenerationStrategy.IdentityColumn);
+		property.SetValueGenerationStrategy(InterbaseValueGenerationStrategy.IdentityColumn);
 		return propertyBuilder;
 	}
 
@@ -36,22 +36,22 @@ public static class FbPropertyBuilderExtensions
 	public static PropertyBuilder UseSequenceTrigger(this PropertyBuilder propertyBuilder)
 	{
 		var property = propertyBuilder.Metadata;
-		property.SetValueGenerationStrategy(FbValueGenerationStrategy.SequenceTrigger);
+		property.SetValueGenerationStrategy(InterbaseValueGenerationStrategy.SequenceTrigger);
 		return propertyBuilder;
 	}
 
 	public static PropertyBuilder<TProperty> UseSequenceTrigger<TProperty>(this PropertyBuilder<TProperty> propertyBuilder)
 		=> (PropertyBuilder<TProperty>)UseSequenceTrigger((PropertyBuilder)propertyBuilder);
 
-	public static IConventionPropertyBuilder HasValueGenerationStrategy(this IConventionPropertyBuilder propertyBuilder, FbValueGenerationStrategy? valueGenerationStrategy, bool fromDataAnnotation = false)
+	public static IConventionPropertyBuilder HasValueGenerationStrategy(this IConventionPropertyBuilder propertyBuilder, InterbaseValueGenerationStrategy? valueGenerationStrategy, bool fromDataAnnotation = false)
 	{
-		if (propertyBuilder.CanSetAnnotation(FbAnnotationNames.ValueGenerationStrategy, valueGenerationStrategy, fromDataAnnotation))
+		if (propertyBuilder.CanSetAnnotation(InterbaseAnnotationNames.ValueGenerationStrategy, valueGenerationStrategy, fromDataAnnotation))
 		{
 			propertyBuilder.Metadata.SetValueGenerationStrategy(valueGenerationStrategy, fromDataAnnotation);
-			if (valueGenerationStrategy != FbValueGenerationStrategy.IdentityColumn)
+			if (valueGenerationStrategy != InterbaseValueGenerationStrategy.IdentityColumn)
 			{
 			}
-			if (valueGenerationStrategy != FbValueGenerationStrategy.SequenceTrigger)
+			if (valueGenerationStrategy != InterbaseValueGenerationStrategy.SequenceTrigger)
 			{
 			}
 			return propertyBuilder;

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,17 +17,17 @@
 
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.Internal;
 
-public class FbSqlTranslatingExpressionVisitorFactory : IRelationalSqlTranslatingExpressionVisitorFactory
+public class InterbaseSqlTranslatingExpressionVisitorFactory : IRelationalSqlTranslatingExpressionVisitorFactory
 {
 	readonly RelationalSqlTranslatingExpressionVisitorDependencies _dependencies;
 
-	public FbSqlTranslatingExpressionVisitorFactory(RelationalSqlTranslatingExpressionVisitorDependencies dependencies)
+	public InterbaseSqlTranslatingExpressionVisitorFactory(RelationalSqlTranslatingExpressionVisitorDependencies dependencies)
 	{
 		_dependencies = dependencies;
 	}
 
 	public virtual RelationalSqlTranslatingExpressionVisitor Create(QueryCompilationContext queryCompilationContext, QueryableMethodTranslatingExpressionVisitor queryableMethodTranslatingExpressionVisitor)
-		=> new FbSqlTranslatingExpressionVisitor(_dependencies, queryCompilationContext, queryableMethodTranslatingExpressionVisitor);
+		=> new InterbaseSqlTranslatingExpressionVisitor(_dependencies, queryCompilationContext, queryableMethodTranslatingExpressionVisitor);
 }

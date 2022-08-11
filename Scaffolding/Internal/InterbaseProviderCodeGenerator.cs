@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,30 +17,30 @@
 
 using System;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure;
+using SK.EntityFrameworkCore.Interbase.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Scaffolding.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Scaffolding.Internal;
 
-public class FbProviderCodeGenerator : ProviderCodeGenerator
+public class InterbaseProviderCodeGenerator : ProviderCodeGenerator
 {
-	static readonly MethodInfo UseFirebirdMethodInfo
-		= typeof(FbDbContextOptionsBuilderExtensions).GetRequiredRuntimeMethod(
-			nameof(FbDbContextOptionsBuilderExtensions.UseFirebird),
+	static readonly MethodInfo UseInterbaseMethodInfo
+		= typeof(InterbaseDbContextOptionsBuilderExtensions).GetRequiredRuntimeMethod(
+			nameof(InterbaseDbContextOptionsBuilderExtensions.UseInterbase),
 			typeof(DbContextOptionsBuilder),
 			typeof(string),
-			typeof(Action<FbDbContextOptionsBuilder>));
+			typeof(Action<InterbaseDbContextOptionsBuilder>));
 
-	public FbProviderCodeGenerator(ProviderCodeGeneratorDependencies dependencies)
+	public InterbaseProviderCodeGenerator(ProviderCodeGeneratorDependencies dependencies)
 		: base(dependencies)
 	{ }
 
 	public override MethodCallCodeFragment GenerateUseProvider(string connectionString, MethodCallCodeFragment providerOptions)
 	{
 		return new MethodCallCodeFragment(
-			UseFirebirdMethodInfo,
+			UseInterbaseMethodInfo,
 			providerOptions == null
 				? new object[] { connectionString }
 				: new object[] { connectionString, new NestedClosureCodeFragment("x", providerOptions) });

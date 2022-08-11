@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -16,17 +16,17 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System.Data.Common;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbRelationalConnection : RelationalConnection, IFbRelationalConnection
+public class InterbaseRelationalConnection : RelationalConnection, IInterbaseRelationalConnection
 {
-	public FbRelationalConnection(RelationalConnectionDependencies dependencies)
+	public InterbaseRelationalConnection(RelationalConnectionDependencies dependencies)
 		: base(dependencies)
 	{ }
 
 	protected override DbConnection CreateDbConnection()
-		=> new FbConnection(ConnectionString);
+		=> new InterbaseConnection(ConnectionString);
 }

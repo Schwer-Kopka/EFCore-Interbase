@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,9 +17,9 @@
 
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Migrations.Operations;
+namespace SK.EntityFrameworkCore.Interbase.Migrations.Operations;
 
-public class FbDropDatabaseOperation : MigrationOperation
+public class InterbaseDropDatabaseOperation : MigrationOperation
 {
 	public virtual string ConnectionString { get; set; }
 }

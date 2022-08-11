@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -15,18 +15,18 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
-using FirebirdSql.Data.Common;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbByteArrayTypeMapping : ByteArrayTypeMapping
+public class InterbaseByteArrayTypeMapping : ByteArrayTypeMapping
 {
-	public FbByteArrayTypeMapping()
+	public InterbaseByteArrayTypeMapping()
 		: base("BLOB SUB_TYPE BINARY", System.Data.DbType.Binary)
 	{ }
 
-	protected FbByteArrayTypeMapping(RelationalTypeMappingParameters parameters)
+	protected InterbaseByteArrayTypeMapping(RelationalTypeMappingParameters parameters)
 		: base(parameters)
 	{ }
 
@@ -37,5 +37,5 @@ public class FbByteArrayTypeMapping : ByteArrayTypeMapping
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-		=> new FbByteArrayTypeMapping(parameters);
+		=> new InterbaseByteArrayTypeMapping(parameters);
 }

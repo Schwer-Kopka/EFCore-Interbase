@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -15,17 +15,17 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
-using FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+using SK.EntityFrameworkCore.Interbase.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Migrations;
+namespace SK.EntityFrameworkCore.Interbase.Migrations;
 
-public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
+public class InterbaseMigrationSqlGeneratorBehavior : IInterbaseMigrationSqlGeneratorBehavior
 {
 	readonly ISqlGenerationHelper _sqlGenerationHelper;
 
-	public FbMigrationSqlGeneratorBehavior(ISqlGenerationHelper sqlGenerationHelper)
+	public InterbaseMigrationSqlGeneratorBehavior(ISqlGenerationHelper sqlGenerationHelper)
 	{
 		_sqlGenerationHelper = sqlGenerationHelper;
 	}
@@ -37,7 +37,7 @@ public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
 		if (options.HasFlag(MigrationsSqlGenerationOptions.Script))
 		{
 			builder.Append("SET TERM ");
-			builder.Append(((IFbSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
+			builder.Append(((IInterbaseSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
 			builder.AppendLine(_sqlGenerationHelper.StatementTerminator);
 			builder.EndCommand();
 		}
@@ -64,7 +64,7 @@ public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
 		builder.AppendLine();
 		if (options.HasFlag(MigrationsSqlGenerationOptions.Script))
 		{
-			builder.AppendLine(((IFbSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
+			builder.AppendLine(((IInterbaseSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
 		}
 		else
 		{
@@ -99,7 +99,7 @@ public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
 		builder.AppendLine();
 		if (options.HasFlag(MigrationsSqlGenerationOptions.Script))
 		{
-			builder.AppendLine(((IFbSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
+			builder.AppendLine(((IInterbaseSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
 		}
 		else
 		{
@@ -111,7 +111,7 @@ public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
 		{
 			builder.Append("SET TERM ");
 			builder.Append(_sqlGenerationHelper.StatementTerminator);
-			builder.AppendLine(((IFbSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
+			builder.AppendLine(((IInterbaseSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
 			builder.EndCommand();
 		}
 	}
@@ -123,7 +123,7 @@ public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
 		if (options.HasFlag(MigrationsSqlGenerationOptions.Script))
 		{
 			builder.Append("SET TERM ");
-			builder.Append(((IFbSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
+			builder.Append(((IInterbaseSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
 			builder.AppendLine(_sqlGenerationHelper.StatementTerminator);
 			builder.EndCommand();
 		}
@@ -150,7 +150,7 @@ public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
 		builder.AppendLine();
 		if (options.HasFlag(MigrationsSqlGenerationOptions.Script))
 		{
-			builder.AppendLine(((IFbSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
+			builder.AppendLine(((IInterbaseSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
 		}
 		else
 		{
@@ -162,7 +162,7 @@ public class FbMigrationSqlGeneratorBehavior : IFbMigrationSqlGeneratorBehavior
 		{
 			builder.Append("SET TERM ");
 			builder.Append(_sqlGenerationHelper.StatementTerminator);
-			builder.AppendLine(((IFbSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
+			builder.AppendLine(((IInterbaseSqlGenerationHelper)_sqlGenerationHelper).AlternativeStatementTerminator);
 			builder.EndCommand();
 		}
 	}

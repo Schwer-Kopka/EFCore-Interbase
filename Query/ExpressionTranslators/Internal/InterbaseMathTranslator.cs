@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -19,15 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbMathTranslator : IMethodCallTranslator
+public class InterbaseMathTranslator : IMethodCallTranslator
 {
 	static readonly Dictionary<MethodInfo, string> SupportedMethodTranslations = new Dictionary<MethodInfo, string>
 		{
@@ -117,24 +117,24 @@ public class FbMathTranslator : IMethodCallTranslator
 			typeof(Math).GetRuntimeMethod(nameof(Math.Round), new[] { typeof(double), typeof(int) })
 		};
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbMathTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseMathTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 	{
 		if (SupportedMethodTranslations.TryGetValue(method, out var sqlFunctionName))
 		{
-			return _fbSqlExpressionFactory.Function(sqlFunctionName, arguments, true, arguments.Select(_ => true), method.ReturnType);
+			return _interbaseSqlExpressionFactory.Function(sqlFunctionName, arguments, true, arguments.Select(_ => true), method.ReturnType);
 		}
 		if (TruncateMethodInfos.Contains(method))
 		{
-			return _fbSqlExpressionFactory.ApplyDefaultTypeMapping(_fbSqlExpressionFactory.Function(
+			return _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.Function(
 				"TRUNC",
-				new[] { _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _fbSqlExpressionFactory.Constant(0) },
+				new[] { _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _interbaseSqlExpressionFactory.Constant(0) },
 				true,
 				new[] { true, false },
 				method.ReturnType));
@@ -142,12 +142,12 @@ public class FbMathTranslator : IMethodCallTranslator
 		if (RoundMethodInfos.Contains(method))
 		{
 			var roundArguments = arguments.Count == 1
-				? new[] { _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _fbSqlExpressionFactory.Constant(0) }
-				: new[] { _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[1]) };
+				? new[] { _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _interbaseSqlExpressionFactory.Constant(0) }
+				: new[] { _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[1]) };
 			var nullability = arguments.Count == 1
 				? new[] { true, false }
 				: new[] { true, true };
-			return _fbSqlExpressionFactory.ApplyDefaultTypeMapping(_fbSqlExpressionFactory.Function(
+			return _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.Function(
 				"ROUND",
 				roundArguments,
 				true,

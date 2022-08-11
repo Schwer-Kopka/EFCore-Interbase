@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -23,18 +23,18 @@ using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 
-using FirebirdSql.Data.Common;
+using SK.InterbaseLibraryAdapter;
 using System.Text;
 using System.Collections;
 
-namespace FirebirdSql.Data.FirebirdClient;
+namespace SK.InterbaseLibraryAdapter;
 
 [ListBindable(false)]
-public sealed class FbParameterCollection : DbParameterCollection
+public sealed class InterbaseParameterCollection : DbParameterCollection
 {
 	#region Fields
 
-	private List<FbParameter> _parameters;
+	private List<InterbaseParameter> _parameters;
 	private bool? _hasParameterWithNonAsciiName;
 
 	#endregion
@@ -43,7 +43,7 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	[Browsable(false)]
 	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public new FbParameter this[string parameterName]
+	public new InterbaseParameter this[string parameterName]
 	{
 		get { return this[IndexOf(parameterName)]; }
 		set { this[IndexOf(parameterName)] = value; }
@@ -51,7 +51,7 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	[Browsable(false)]
 	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public new FbParameter this[int index]
+	public new InterbaseParameter this[int index]
 	{
 		get { return _parameters[index]; }
 		set { _parameters[index] = value; }
@@ -104,9 +104,9 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	#region Constructors
 
-	internal FbParameterCollection()
+	internal InterbaseParameterCollection()
 	{
-		_parameters = new List<FbParameter>();
+		_parameters = new List<InterbaseParameter>();
 		_hasParameterWithNonAsciiName = null;
 	}
 
@@ -114,7 +114,7 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	#region DbParameterCollection overriden methods
 
-	public void AddRange(IEnumerable<FbParameter> values)
+	public void AddRange(IEnumerable<InterbaseParameter> values)
 	{
 		foreach (var p in values)
 		{
@@ -124,37 +124,37 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	public override void AddRange(Array values)
 	{
-		AddRange(values.Cast<object>().Select(x => { EnsureFbParameterType(x); return (FbParameter)x; }));
+		AddRange(values.Cast<object>().Select(x => { EnsureInterbaseParameterType(x); return (InterbaseParameter)x; }));
 	}
 
-	public FbParameter AddWithValue(string parameterName, object value)
+	public InterbaseParameter AddWithValue(string parameterName, object value)
 	{
-		return Add(new FbParameter(parameterName, value));
+		return Add(new InterbaseParameter(parameterName, value));
 	}
 
-	public FbParameter Add(string parameterName, object value)
+	public InterbaseParameter Add(string parameterName, object value)
 	{
-		return Add(new FbParameter(parameterName, value));
+		return Add(new InterbaseParameter(parameterName, value));
 	}
 
-	public FbParameter Add(string parameterName, FbDbType type)
+	public InterbaseParameter Add(string parameterName, InterbaseDbType type)
 	{
-		return Add(new FbParameter(parameterName, type));
+		return Add(new InterbaseParameter(parameterName, type));
 	}
 
-	public FbParameter Add(string parameterName, FbDbType fbType, int size)
+	public InterbaseParameter Add(string parameterName, InterbaseDbType interbaseType, int size)
 	{
-		return Add(new FbParameter(parameterName, fbType, size));
+		return Add(new InterbaseParameter(parameterName, interbaseType, size));
 	}
 
-	public FbParameter Add(string parameterName, FbDbType fbType, int size, string sourceColumn)
+	public InterbaseParameter Add(string parameterName, InterbaseDbType interbaseType, int size, string sourceColumn)
 	{
-		return Add(new FbParameter(parameterName, fbType, size, sourceColumn));
+		return Add(new InterbaseParameter(parameterName, interbaseType, size, sourceColumn));
 	}
 
-	public FbParameter Add(FbParameter value)
+	public InterbaseParameter Add(InterbaseParameter value)
 	{
-		EnsureFbParameterAddOrInsert(value);
+		EnsureInterbaseParameterAddOrInsert(value);
 
 		AttachParameter(value);
 		_parameters.Add(value);
@@ -163,21 +163,21 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	public override int Add(object value)
 	{
-		EnsureFbParameterType(value);
+		EnsureInterbaseParameterType(value);
 
-		return IndexOf(Add((FbParameter)value));
+		return IndexOf(Add((InterbaseParameter)value));
 	}
 
-	public bool Contains(FbParameter value)
+	public bool Contains(InterbaseParameter value)
 	{
 		return _parameters.Contains(value);
 	}
 
 	public override bool Contains(object value)
 	{
-		EnsureFbParameterType(value);
+		EnsureInterbaseParameterType(value);
 
-		return Contains((FbParameter)value);
+		return Contains((InterbaseParameter)value);
 	}
 
 	public override bool Contains(string parameterName)
@@ -185,16 +185,16 @@ public sealed class FbParameterCollection : DbParameterCollection
 		return IndexOf(parameterName) != -1;
 	}
 
-	public int IndexOf(FbParameter value)
+	public int IndexOf(InterbaseParameter value)
 	{
 		return _parameters.IndexOf(value);
 	}
 
 	public override int IndexOf(object value)
 	{
-		EnsureFbParameterType(value);
+		EnsureInterbaseParameterType(value);
 
-		return IndexOf((FbParameter)value);
+		return IndexOf((InterbaseParameter)value);
 	}
 
 	public override int IndexOf(string parameterName)
@@ -204,11 +204,11 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	internal int IndexOf(string parameterName, int luckyIndex)
 	{
-		var isNonAsciiParameterName = FbParameter.IsNonAsciiParameterName(parameterName);
+		var isNonAsciiParameterName = InterbaseParameter.IsNonAsciiParameterName(parameterName);
 		var usedComparison = isNonAsciiParameterName || HasParameterWithNonAsciiName
 			? StringComparison.CurrentCultureIgnoreCase
 			: StringComparison.OrdinalIgnoreCase;
-		var normalizedParameterName = FbParameter.NormalizeParameterName(parameterName);
+		var normalizedParameterName = InterbaseParameter.NormalizeParameterName(parameterName);
 		if (luckyIndex != -1 && luckyIndex < _parameters.Count)
 		{
 			if (_parameters[luckyIndex].InternalParameterName.Equals(normalizedParameterName, usedComparison))
@@ -220,9 +220,9 @@ public sealed class FbParameterCollection : DbParameterCollection
 		return _parameters.FindIndex(x => x.InternalParameterName.Equals(normalizedParameterName, usedComparison));
 	}
 
-	public void Insert(int index, FbParameter value)
+	public void Insert(int index, InterbaseParameter value)
 	{
-		EnsureFbParameterAddOrInsert(value);
+		EnsureInterbaseParameterAddOrInsert(value);
 
 		AttachParameter(value);
 		_parameters.Insert(index, value);
@@ -230,12 +230,12 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	public override void Insert(int index, object value)
 	{
-		EnsureFbParameterType(value);
+		EnsureInterbaseParameterType(value);
 
-		Insert(index, (FbParameter)value);
+		Insert(index, (InterbaseParameter)value);
 	}
 
-	public void Remove(FbParameter value)
+	public void Remove(InterbaseParameter value)
 	{
 		if (!_parameters.Remove(value))
 		{
@@ -247,9 +247,9 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	public override void Remove(object value)
 	{
-		EnsureFbParameterType(value);
+		EnsureInterbaseParameterType(value);
 
-		Remove((FbParameter)value);
+		Remove((InterbaseParameter)value);
 	}
 
 	public override void RemoveAt(int index)
@@ -269,7 +269,7 @@ public sealed class FbParameterCollection : DbParameterCollection
 		RemoveAt(IndexOf(parameterName));
 	}
 
-	public void CopyTo(FbParameter[] array, int index)
+	public void CopyTo(InterbaseParameter[] array, int index)
 	{
 		_parameters.CopyTo(array, index);
 	}
@@ -310,12 +310,12 @@ public sealed class FbParameterCollection : DbParameterCollection
 
 	protected override void SetParameter(int index, DbParameter value)
 	{
-		this[index] = (FbParameter)value;
+		this[index] = (InterbaseParameter)value;
 	}
 
 	protected override void SetParameter(string parameterName, DbParameter value)
 	{
-		this[parameterName] = (FbParameter)value;
+		this[parameterName] = (InterbaseParameter)value;
 	}
 
 	#endregion
@@ -345,15 +345,15 @@ public sealed class FbParameterCollection : DbParameterCollection
 		}
 	}
 
-	private void EnsureFbParameterType(object value)
+	private void EnsureInterbaseParameterType(object value)
 	{
-		if (!(value is FbParameter))
+		if (!(value is InterbaseParameter))
 		{
-			throw new InvalidCastException($"The parameter passed was not a {nameof(FbParameter)}.");
+			throw new InvalidCastException($"The parameter passed was not a {nameof(InterbaseParameter)}.");
 		}
 	}
 
-	private void EnsureFbParameterAddOrInsert(FbParameter value)
+	private void EnsureInterbaseParameterAddOrInsert(InterbaseParameter value)
 	{
 		if (value == null)
 		{
@@ -361,7 +361,7 @@ public sealed class FbParameterCollection : DbParameterCollection
 		}
 		if (value.Parent != null)
 		{
-			throw new ArgumentException($"The {nameof(FbParameter)} specified in the value parameter is already added to this or another {nameof(FbParameterCollection)}.");
+			throw new ArgumentException($"The {nameof(InterbaseParameter)} specified in the value parameter is already added to this or another {nameof(InterbaseParameterCollection)}.");
 		}
 		if (value.ParameterName == null || value.ParameterName.Length == 0)
 		{
@@ -371,17 +371,17 @@ public sealed class FbParameterCollection : DbParameterCollection
 		{
 			if (Contains(value.ParameterName))
 			{
-				throw new ArgumentException($"{nameof(FbParameterCollection)} already contains {nameof(FbParameter)} with {nameof(FbParameter.ParameterName)} '{value.ParameterName}'.");
+				throw new ArgumentException($"{nameof(InterbaseParameterCollection)} already contains {nameof(InterbaseParameter)} with {nameof(InterbaseParameter.ParameterName)} '{value.ParameterName}'.");
 			}
 		}
 	}
 
-	private void AttachParameter(FbParameter parameter)
+	private void AttachParameter(InterbaseParameter parameter)
 	{
 		parameter.Parent = this;
 	}
 
-	private void ReleaseParameter(FbParameter parameter)
+	private void ReleaseParameter(InterbaseParameter parameter)
 	{
 		parameter.Parent = null;
 	}

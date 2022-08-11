@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,9 +17,9 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird;
+namespace SK.EntityFrameworkCore.Interbase;
 
-public interface IFbMigrationSqlGeneratorBehavior
+public interface IInterbaseMigrationSqlGeneratorBehavior
 {
 	void CreateSequenceTriggerForColumn(string columnName, string tableName, string schemaName, MigrationsSqlGenerationOptions options, MigrationCommandListBuilder builder);
 	void DropSequenceTriggerForColumn(string columnName, string tableName, string schemaName, MigrationsSqlGenerationOptions options, MigrationCommandListBuilder builder);

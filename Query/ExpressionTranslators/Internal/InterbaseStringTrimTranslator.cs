@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,15 +18,15 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringTrimTranslator : IMethodCallTranslator
+public class InterbaseStringTrimTranslator : IMethodCallTranslator
 {
 	static readonly MethodInfo TrimWithoutArgsMethod = typeof(string).GetRuntimeMethod(nameof(string.Trim), new Type[] { });
 	static readonly MethodInfo TrimWithCharArgMethod = typeof(string).GetRuntimeMethod(nameof(string.Trim), new[] { typeof(char) });
@@ -35,11 +35,11 @@ public class FbStringTrimTranslator : IMethodCallTranslator
 	static readonly MethodInfo TrimStartWithoutArgsMethod = typeof(string).GetRuntimeMethod(nameof(string.TrimStart), new Type[] { });
 	static readonly MethodInfo TrimStartWithCharArgMethod = typeof(string).GetRuntimeMethod(nameof(string.TrimStart), new[] { typeof(char) });
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringTrimTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringTrimTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -48,7 +48,7 @@ public class FbStringTrimTranslator : IMethodCallTranslator
 		{
 			return null;
 		}
-		return _fbSqlExpressionFactory.SpacedFunction(
+		return _interbaseSqlExpressionFactory.SpacedFunction(
 			"TRIM",
 			trimArguments,
 			true,
@@ -60,37 +60,37 @@ public class FbStringTrimTranslator : IMethodCallTranslator
 	{
 		if (method.Equals(TrimWithoutArgsMethod))
 		{
-			trimArguments = new[] { _fbSqlExpressionFactory.Fragment("BOTH"), _fbSqlExpressionFactory.Fragment("FROM"), instance };
+			trimArguments = new[] { _interbaseSqlExpressionFactory.Fragment("BOTH"), _interbaseSqlExpressionFactory.Fragment("FROM"), instance };
 			nullability = new[] { false, false, true };
 			return true;
 		}
 		if (method.Equals(TrimWithCharArgMethod))
 		{
-			trimArguments = new[] { _fbSqlExpressionFactory.Fragment("BOTH"), _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _fbSqlExpressionFactory.Fragment("FROM"), instance };
+			trimArguments = new[] { _interbaseSqlExpressionFactory.Fragment("BOTH"), _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _interbaseSqlExpressionFactory.Fragment("FROM"), instance };
 			nullability = new[] { false, true, false, true };
 			return true;
 		}
 		if (method.Equals(TrimEndWithoutArgsMethod))
 		{
-			trimArguments = new[] { _fbSqlExpressionFactory.Fragment("TRAILING"), _fbSqlExpressionFactory.Fragment("FROM"), instance };
+			trimArguments = new[] { _interbaseSqlExpressionFactory.Fragment("TRAILING"), _interbaseSqlExpressionFactory.Fragment("FROM"), instance };
 			nullability = new[] { false, false, true };
 			return true;
 		}
 		if (method.Equals(TrimEndWithCharArgMethod))
 		{
-			trimArguments = new[] { _fbSqlExpressionFactory.Fragment("TRAILING"), _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _fbSqlExpressionFactory.Fragment("FROM"), instance };
+			trimArguments = new[] { _interbaseSqlExpressionFactory.Fragment("TRAILING"), _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _interbaseSqlExpressionFactory.Fragment("FROM"), instance };
 			nullability = new[] { false, true, false, true };
 			return true;
 		}
 		if (method.Equals(TrimStartWithoutArgsMethod))
 		{
-			trimArguments = new[] { _fbSqlExpressionFactory.Fragment("LEADING"), _fbSqlExpressionFactory.Fragment("FROM"), instance };
+			trimArguments = new[] { _interbaseSqlExpressionFactory.Fragment("LEADING"), _interbaseSqlExpressionFactory.Fragment("FROM"), instance };
 			nullability = new[] { false, false, true };
 			return true;
 		}
 		if (method.Equals(TrimStartWithCharArgMethod))
 		{
-			trimArguments = new[] { _fbSqlExpressionFactory.Fragment("LEADING"), _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _fbSqlExpressionFactory.Fragment("FROM"), instance };
+			trimArguments = new[] { _interbaseSqlExpressionFactory.Fragment("LEADING"), _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), _interbaseSqlExpressionFactory.Fragment("FROM"), instance };
 			nullability = new[] { false, true, false, true };
 			return true;
 		}

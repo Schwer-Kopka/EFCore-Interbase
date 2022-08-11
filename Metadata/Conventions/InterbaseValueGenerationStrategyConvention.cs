@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -20,11 +20,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Conventions;
+namespace SK.EntityFrameworkCore.Interbase.Metadata.Conventions;
 
-public class FbValueGenerationStrategyConvention : IModelInitializedConvention, IModelFinalizingConvention
+public class InterbaseValueGenerationStrategyConvention : IModelInitializedConvention, IModelFinalizingConvention
 {
-	public FbValueGenerationStrategyConvention(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
+	public InterbaseValueGenerationStrategyConvention(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
 	{
 		Dependencies = dependencies;
 	}
@@ -33,7 +33,7 @@ public class FbValueGenerationStrategyConvention : IModelInitializedConvention, 
 
 	public virtual void ProcessModelInitialized(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
 	{
-		modelBuilder.HasValueGenerationStrategy(FbValueGenerationStrategy.IdentityColumn);
+		modelBuilder.HasValueGenerationStrategy(InterbaseValueGenerationStrategy.IdentityColumn);
 	}
 
 	public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
@@ -44,7 +44,7 @@ public class FbValueGenerationStrategyConvention : IModelInitializedConvention, 
 			{
 				// Needed for the annotation to show up in the model snapshot
 				var strategy = property.GetValueGenerationStrategy();
-				if (strategy != FbValueGenerationStrategy.None)
+				if (strategy != InterbaseValueGenerationStrategy.None)
 				{
 					property.Builder.HasValueGenerationStrategy(strategy);
 				}

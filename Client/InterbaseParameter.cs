@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -20,21 +20,21 @@ using System.Data;
 using System.Data.Common;
 using System.ComponentModel;
 
-using FirebirdSql.Data.Common;
+using SK.InterbaseLibraryAdapter;
 using System.Text;
 
-namespace FirebirdSql.Data.FirebirdClient;
+namespace SK.InterbaseLibraryAdapter;
 
 [ParenthesizePropertyName(true)]
-public sealed class FbParameter : DbParameter, ICloneable
+public sealed class InterbaseParameter : DbParameter, ICloneable
 {
 	#region Fields
 
-	private FbParameterCollection _parent;
-	private FbDbType _fbDbType;
+	private InterbaseParameterCollection _parent;
+	private InterbaseDbType _interbaseDbType;
 	private ParameterDirection _direction;
 	private DataRowVersion _sourceVersion;
-	private FbCharset _charset;
+	private InterbaseCharset _charset;
 	private bool _isNullable;
 	private bool _sourceColumnNullMapping;
 	private byte _precision;
@@ -80,9 +80,9 @@ public sealed class FbParameter : DbParameter, ICloneable
 
 			// Hack for Clob parameters
 			if (value == 2147483647 &&
-				(FbDbType == FbDbType.VarChar || FbDbType == FbDbType.Char))
+				(InterbaseDbType == InterbaseDbType.VarChar || InterbaseDbType == InterbaseDbType.Char))
 			{
-				FbDbType = FbDbType.Text;
+				InterbaseDbType = InterbaseDbType.Text;
 			}
 		}
 	}
@@ -127,19 +127,19 @@ public sealed class FbParameter : DbParameter, ICloneable
 	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 	public override DbType DbType
 	{
-		get { return TypeHelper.GetDbTypeFromDbDataType((DbDataType)_fbDbType); }
-		set { FbDbType = (FbDbType)TypeHelper.GetDbDataTypeFromDbType(value); }
+		get { return TypeHelper.GetDbTypeFromDbDataType((DbDataType)_interbaseDbType); }
+		set { InterbaseDbType = (InterbaseDbType)TypeHelper.GetDbDataTypeFromDbType(value); }
 	}
 
 	[RefreshProperties(RefreshProperties.All)]
 	[Category("Data")]
-	[DefaultValue(FbDbType.VarChar)]
-	public FbDbType FbDbType
+	[DefaultValue(InterbaseDbType.VarChar)]
+	public InterbaseDbType InterbaseDbType
 	{
-		get { return _fbDbType; }
+		get { return _interbaseDbType; }
 		set
 		{
-			_fbDbType = value;
+			_interbaseDbType = value;
 			IsTypeSet = true;
 		}
 	}
@@ -156,7 +156,7 @@ public sealed class FbParameter : DbParameter, ICloneable
 				value = DBNull.Value;
 			}
 
-			if (FbDbType == FbDbType.Guid && value != null &&
+			if (InterbaseDbType == InterbaseDbType.Guid && value != null &&
 				value != DBNull.Value && !(value is Guid) && !(value is byte[]))
 			{
 				throw new InvalidOperationException("Incorrect Guid value.");
@@ -166,14 +166,14 @@ public sealed class FbParameter : DbParameter, ICloneable
 
 			if (!IsTypeSet)
 			{
-				SetFbDbType(value);
+				SetInterbaseDbType(value);
 			}
 		}
 	}
 
 	[Category("Data")]
-	[DefaultValue(FbCharset.Default)]
-	public FbCharset Charset
+	[DefaultValue(InterbaseCharset.Default)]
+	public InterbaseCharset Charset
 	{
 		get { return _charset; }
 		set { _charset = value; }
@@ -209,7 +209,7 @@ public sealed class FbParameter : DbParameter, ICloneable
 
 	#region Internal Properties
 
-	internal FbParameterCollection Parent
+	internal InterbaseParameterCollection Parent
 	{
 		get { return _parent; }
 		set
@@ -257,52 +257,52 @@ public sealed class FbParameter : DbParameter, ICloneable
 
 	#region Constructors
 
-	public FbParameter()
+	public InterbaseParameter()
 	{
-		_fbDbType = FbDbType.VarChar;
+		_interbaseDbType = InterbaseDbType.VarChar;
 		_direction = ParameterDirection.Input;
 		_sourceVersion = DataRowVersion.Current;
 		_sourceColumn = string.Empty;
 		_parameterName = string.Empty;
-		_charset = FbCharset.Default;
+		_charset = InterbaseCharset.Default;
 		_internalParameterName = string.Empty;
 	}
 
-	public FbParameter(string parameterName, object value)
+	public InterbaseParameter(string parameterName, object value)
 		: this()
 	{
 		ParameterName = parameterName;
 		Value = value;
 	}
 
-	public FbParameter(string parameterName, FbDbType fbType)
+	public InterbaseParameter(string parameterName, InterbaseDbType interbaseType)
 		: this()
 	{
 		ParameterName = parameterName;
-		FbDbType = fbType;
+		InterbaseDbType = interbaseType;
 	}
 
-	public FbParameter(string parameterName, FbDbType fbType, int size)
+	public InterbaseParameter(string parameterName, InterbaseDbType interbaseType, int size)
 		: this()
 	{
 		ParameterName = parameterName;
-		FbDbType = fbType;
+		InterbaseDbType = interbaseType;
 		Size = size;
 	}
 
-	public FbParameter(string parameterName, FbDbType fbType, int size, string sourceColumn)
+	public InterbaseParameter(string parameterName, InterbaseDbType interbaseType, int size, string sourceColumn)
 		: this()
 	{
 		ParameterName = parameterName;
-		FbDbType = fbType;
+		InterbaseDbType = interbaseType;
 		Size = size;
 		_sourceColumn = sourceColumn;
 	}
 
 	[EditorBrowsable(EditorBrowsableState.Advanced)]
-	public FbParameter(
+	public InterbaseParameter(
 		string parameterName,
-		FbDbType dbType,
+		InterbaseDbType dbType,
 		int size,
 		ParameterDirection direction,
 		bool isNullable,
@@ -313,7 +313,7 @@ public sealed class FbParameter : DbParameter, ICloneable
 		object value)
 	{
 		ParameterName = parameterName;
-		FbDbType = dbType;
+		InterbaseDbType = dbType;
 		Size = size;
 		_direction = direction;
 		_isNullable = isNullable;
@@ -322,7 +322,7 @@ public sealed class FbParameter : DbParameter, ICloneable
 		_sourceColumn = sourceColumn;
 		_sourceVersion = sourceVersion;
 		Value = value;
-		_charset = FbCharset.Default;
+		_charset = InterbaseCharset.Default;
 	}
 
 	#endregion
@@ -330,9 +330,9 @@ public sealed class FbParameter : DbParameter, ICloneable
 	#region ICloneable Methods
 	object ICloneable.Clone()
 	{
-		return new FbParameter(
+		return new InterbaseParameter(
 			_parameterName,
-			_fbDbType,
+			_interbaseDbType,
 			_size,
 			_direction,
 			_isNullable,
@@ -364,13 +364,13 @@ public sealed class FbParameter : DbParameter, ICloneable
 
 	#region Private Methods
 
-	private void SetFbDbType(object value)
+	private void SetInterbaseDbType(object value)
 	{
 		if (value == null)
 		{
 			value = DBNull.Value;
 		}
-		_fbDbType = TypeHelper.GetFbDataTypeFromType(value.GetType());
+		_interbaseDbType = TypeHelper.GetInterbaseDataTypeFromType(value.GetType());
 	}
 
 	#endregion

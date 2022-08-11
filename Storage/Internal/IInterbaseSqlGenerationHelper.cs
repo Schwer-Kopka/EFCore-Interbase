@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,9 +18,9 @@
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public interface IFbSqlGenerationHelper : ISqlGenerationHelper
+public interface IInterbaseSqlGenerationHelper : ISqlGenerationHelper
 {
 	string StringLiteralQueryType(string s);
 	string StringParameterQueryType(bool isUnicode);

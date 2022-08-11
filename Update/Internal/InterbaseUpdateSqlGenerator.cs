@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+using SK.EntityFrameworkCore.Interbase.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Update;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Update.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Update.Internal;
 
-public class FbUpdateSqlGenerator : UpdateSqlGenerator, IFbUpdateSqlGenerator
+public class InterbaseUpdateSqlGenerator : UpdateSqlGenerator, IInterbaseUpdateSqlGenerator
 {
-	public FbUpdateSqlGenerator(UpdateSqlGeneratorDependencies dependencies)
+	public InterbaseUpdateSqlGenerator(UpdateSqlGeneratorDependencies dependencies)
 		: base(dependencies)
 	{ }
 
@@ -180,7 +180,7 @@ public class FbUpdateSqlGenerator : UpdateSqlGenerator, IFbUpdateSqlGenerator
 					}
 					else
 					{
-						((IFbSqlGenerationHelper)helper).GenerateBlockParameterName(sb, o.ParameterName);
+						((IInterbaseSqlGenerationHelper)helper).GenerateBlockParameterName(sb, o.ParameterName);
 					}
 				});
 	}
@@ -202,7 +202,7 @@ public class FbUpdateSqlGenerator : UpdateSqlGenerator, IFbUpdateSqlGenerator
 		}
 		else
 		{
-			((IFbSqlGenerationHelper)SqlGenerationHelper).GenerateBlockParameterName(commandStringBuilder, useOriginalValue ? columnModification.OriginalParameterName : columnModification.ParameterName);
+			((IInterbaseSqlGenerationHelper)SqlGenerationHelper).GenerateBlockParameterName(commandStringBuilder, useOriginalValue ? columnModification.OriginalParameterName : columnModification.ParameterName);
 		}
 	}
 

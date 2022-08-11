@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -22,17 +22,17 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.Expressions.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.Expressions.Internal;
 
-public class FbSpacedFunctionExpression : SqlFunctionExpression, IEquatable<FbSpacedFunctionExpression>
+public class InterbaseSpacedFunctionExpression : SqlFunctionExpression, IEquatable<InterbaseSpacedFunctionExpression>
 {
-	public FbSpacedFunctionExpression(string name, IEnumerable<SqlExpression> arguments, bool nullable, IEnumerable<bool> argumentsPropagateNullability, Type type, RelationalTypeMapping typeMapping)
+	public InterbaseSpacedFunctionExpression(string name, IEnumerable<SqlExpression> arguments, bool nullable, IEnumerable<bool> argumentsPropagateNullability, Type type, RelationalTypeMapping typeMapping)
 		: base(name, arguments, nullable, argumentsPropagateNullability, type, typeMapping)
 	{ }
 
 	public override SqlFunctionExpression ApplyTypeMapping(RelationalTypeMapping typeMapping)
 	{
-		return new FbSpacedFunctionExpression(Name, Arguments, IsNullable, ArgumentsPropagateNullability, Type, typeMapping ?? TypeMapping);
+		return new InterbaseSpacedFunctionExpression(Name, Arguments, IsNullable, ArgumentsPropagateNullability, Type, typeMapping ?? TypeMapping);
 	}
 
 	protected override Expression VisitChildren(ExpressionVisitor visitor)
@@ -47,7 +47,7 @@ public class FbSpacedFunctionExpression : SqlFunctionExpression, IEquatable<FbSp
 		}
 
 		return changed
-			? new FbSpacedFunctionExpression(Name, arguments, IsNullable, ArgumentsPropagateNullability, Type, TypeMapping)
+			? new InterbaseSpacedFunctionExpression(Name, arguments, IsNullable, ArgumentsPropagateNullability, Type, TypeMapping)
 			: this;
 	}
 
@@ -57,7 +57,7 @@ public class FbSpacedFunctionExpression : SqlFunctionExpression, IEquatable<FbSp
 			throw new ArgumentException("Instance must be null.", nameof(instance));
 
 		return !arguments.SequenceEqual(Arguments)
-			? new FbSpacedFunctionExpression(Name, arguments, IsNullable, ArgumentsPropagateNullability, Type, TypeMapping)
+			? new InterbaseSpacedFunctionExpression(Name, arguments, IsNullable, ArgumentsPropagateNullability, Type, TypeMapping)
 			: this;
 	}
 
@@ -65,11 +65,11 @@ public class FbSpacedFunctionExpression : SqlFunctionExpression, IEquatable<FbSp
 	{
 		return obj != null
 			&& (ReferenceEquals(this, obj)
-				|| obj is FbSpacedFunctionExpression fbExtraFunctionExpression
-				&& Equals(fbExtraFunctionExpression));
+				|| obj is InterbaseSpacedFunctionExpression interbaseExtraFunctionExpression
+				&& Equals(interbaseExtraFunctionExpression));
 	}
 
-	public virtual bool Equals(FbSpacedFunctionExpression other)
+	public virtual bool Equals(InterbaseSpacedFunctionExpression other)
 	{
 		return base.Equals(other);
 	}

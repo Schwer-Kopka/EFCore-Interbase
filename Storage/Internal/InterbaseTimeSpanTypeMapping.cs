@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,43 +17,43 @@
 
 using System;
 using System.Data.Common;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbTimeSpanTypeMapping : TimeSpanTypeMapping
+public class InterbaseTimeSpanTypeMapping : TimeSpanTypeMapping
 {
-	readonly FbDbType _fbDbType;
+	readonly InterbaseDbType _interbaseDbType;
 
-	public FbTimeSpanTypeMapping(string storeType, FbDbType fbDbType)
+	public InterbaseTimeSpanTypeMapping(string storeType, InterbaseDbType interbaseDbType)
 		: base(storeType)
 	{
-		_fbDbType = fbDbType;
+		_interbaseDbType = interbaseDbType;
 	}
 
-	protected FbTimeSpanTypeMapping(RelationalTypeMappingParameters parameters, FbDbType fbDbType)
+	protected InterbaseTimeSpanTypeMapping(RelationalTypeMappingParameters parameters, InterbaseDbType interbaseDbType)
 		: base(parameters)
 	{
-		_fbDbType = fbDbType;
+		_interbaseDbType = interbaseDbType;
 	}
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = _fbDbType;
+		((InterbaseParameter)parameter).InterbaseDbType = _interbaseDbType;
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)
 	{
-		switch (_fbDbType)
+		switch (_interbaseDbType)
 		{
-			case FbDbType.Time:
+			case InterbaseDbType.Time:
 				return $"CAST('{value:hh\\:mm\\:ss\\.ffff}' AS TIME)";
 			default:
-				throw new ArgumentOutOfRangeException(nameof(_fbDbType), $"{nameof(_fbDbType)}={_fbDbType}");
+				throw new ArgumentOutOfRangeException(nameof(_interbaseDbType), $"{nameof(_interbaseDbType)}={_interbaseDbType}");
 		}
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-		=> new FbTimeSpanTypeMapping(parameters, _fbDbType);
+		=> new InterbaseTimeSpanTypeMapping(parameters, _interbaseDbType);
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -15,9 +15,9 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net), Jean Ressouche, Rafael Almeida (ralms@ralms.net)
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Metadata;
+namespace SK.EntityFrameworkCore.Interbase.Metadata;
 
-public enum FbValueGenerationStrategy
+public enum InterbaseValueGenerationStrategy
 {
 	None,
 	SequenceTrigger,

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -16,7 +16,7 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System;
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Internal;
+using SK.EntityFrameworkCore.Interbase.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -24,11 +24,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Conventions;
+namespace SK.EntityFrameworkCore.Interbase.Metadata.Conventions;
 
-public class FbStoreGenerationConvention : StoreGenerationConvention
+public class InterbaseStoreGenerationConvention : StoreGenerationConvention
 {
-	public FbStoreGenerationConvention(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
+	public InterbaseStoreGenerationConvention(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
 		: base(dependencies, relationalDependencies)
 	{ }
 
@@ -71,7 +71,7 @@ public class FbStoreGenerationConvention : StoreGenerationConvention
 				}
 
 				break;
-			case FbAnnotationNames.ValueGenerationStrategy:
+			case InterbaseAnnotationNames.ValueGenerationStrategy:
 				if ((propertyBuilder.HasDefaultValue(null, fromDataAnnotation) == null
 					 | propertyBuilder.HasDefaultValueSql(null, fromDataAnnotation) == null
 					 | propertyBuilder.HasComputedColumnSql(null, fromDataAnnotation) == null)
@@ -90,27 +90,27 @@ public class FbStoreGenerationConvention : StoreGenerationConvention
 	protected override void Validate(IConventionProperty property, in StoreObjectIdentifier storeObject)
 	{
 		if (property.GetValueGenerationStrategyConfigurationSource() != null
-			   && property.GetValueGenerationStrategy() != FbValueGenerationStrategy.None)
+			   && property.GetValueGenerationStrategy() != InterbaseValueGenerationStrategy.None)
 		{
 			if (property.GetDefaultValue() != null)
 			{
 				throw new InvalidOperationException(
 					RelationalStrings.ConflictingColumnServerGeneration(
-						nameof(FbValueGenerationStrategy), property.Name, "DefaultValue"));
+						nameof(InterbaseValueGenerationStrategy), property.Name, "DefaultValue"));
 			}
 
 			if (property.GetDefaultValueSql() != null)
 			{
 				throw new InvalidOperationException(
 					RelationalStrings.ConflictingColumnServerGeneration(
-						nameof(FbValueGenerationStrategy), property.Name, "DefaultValueSql"));
+						nameof(InterbaseValueGenerationStrategy), property.Name, "DefaultValueSql"));
 			}
 
 			if (property.GetComputedColumnSql() != null)
 			{
 				throw new InvalidOperationException(
 					RelationalStrings.ConflictingColumnServerGeneration(
-						nameof(FbValueGenerationStrategy), property.Name, "ComputedColumnSql"));
+						nameof(InterbaseValueGenerationStrategy), property.Name, "ComputedColumnSql"));
 			}
 		}
 		base.Validate(property, storeObject);

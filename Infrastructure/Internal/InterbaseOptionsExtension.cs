@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -21,18 +21,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Infrastructure.Internal;
 
-public class FbOptionsExtension : RelationalOptionsExtension
+public class InterbaseOptionsExtension : RelationalOptionsExtension
 {
 	DbContextOptionsExtensionInfo _info;
 	bool? _explicitParameterTypes;
 	bool? _explicitStringLiteralTypes;
 
-	public FbOptionsExtension()
+	public InterbaseOptionsExtension()
 	{ }
 
-	public FbOptionsExtension(FbOptionsExtension copyFrom)
+	public InterbaseOptionsExtension(InterbaseOptionsExtension copyFrom)
 		: base(copyFrom)
 	{
 		_explicitParameterTypes = copyFrom._explicitParameterTypes;
@@ -40,25 +40,25 @@ public class FbOptionsExtension : RelationalOptionsExtension
 	}
 
 	protected override RelationalOptionsExtension Clone()
-		=> new FbOptionsExtension(this);
+		=> new InterbaseOptionsExtension(this);
 
 	public override void ApplyServices(IServiceCollection services)
-		=> services.AddEntityFrameworkFirebird();
+		=> services.AddEntityFrameworkInterbase();
 
 	public override DbContextOptionsExtensionInfo Info => _info ??= new ExtensionInfo(this);
 	public virtual bool? ExplicitParameterTypes => _explicitParameterTypes;
 	public virtual bool? ExplicitStringLiteralTypes => _explicitStringLiteralTypes;
 
-	public virtual FbOptionsExtension WithExplicitParameterTypes(bool explicitParameterTypes)
+	public virtual InterbaseOptionsExtension WithExplicitParameterTypes(bool explicitParameterTypes)
 	{
-		var clone = (FbOptionsExtension)Clone();
+		var clone = (InterbaseOptionsExtension)Clone();
 		clone._explicitParameterTypes = explicitParameterTypes;
 		return clone;
 	}
 
-	public virtual FbOptionsExtension WithExplicitStringLiteralTypes(bool explicitStringLiteralTypes)
+	public virtual InterbaseOptionsExtension WithExplicitStringLiteralTypes(bool explicitStringLiteralTypes)
 	{
-		var clone = (FbOptionsExtension)Clone();
+		var clone = (InterbaseOptionsExtension)Clone();
 		clone._explicitStringLiteralTypes = explicitStringLiteralTypes;
 		return clone;
 	}
@@ -71,7 +71,7 @@ public class FbOptionsExtension : RelationalOptionsExtension
 			: base(extension)
 		{ }
 
-		new FbOptionsExtension Extension => (FbOptionsExtension)base.Extension;
+		new InterbaseOptionsExtension Extension => (InterbaseOptionsExtension)base.Extension;
 
 		public override int GetServiceProviderHashCode()
 		{

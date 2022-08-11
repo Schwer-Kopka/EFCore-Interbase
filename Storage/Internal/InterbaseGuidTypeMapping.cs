@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -16,24 +16,24 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System.Data.Common;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbGuidTypeMapping : GuidTypeMapping
+public class InterbaseGuidTypeMapping : GuidTypeMapping
 {
-	public FbGuidTypeMapping()
+	public InterbaseGuidTypeMapping()
 		: base("CHAR(16) CHARACTER SET OCTETS")
 	{ }
 
-	protected FbGuidTypeMapping(RelationalTypeMappingParameters parameters)
+	protected InterbaseGuidTypeMapping(RelationalTypeMappingParameters parameters)
 		: base(parameters)
 	{ }
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = FbDbType.Guid;
+		((InterbaseParameter)parameter).InterbaseDbType = InterbaseDbType.Guid;
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)
@@ -42,5 +42,5 @@ public class FbGuidTypeMapping : GuidTypeMapping
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-		=> new FbGuidTypeMapping(parameters);
+		=> new InterbaseGuidTypeMapping(parameters);
 }

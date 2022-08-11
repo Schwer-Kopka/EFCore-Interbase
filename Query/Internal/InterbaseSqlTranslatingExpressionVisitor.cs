@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -19,11 +19,11 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.Internal;
 
-public class FbSqlTranslatingExpressionVisitor : RelationalSqlTranslatingExpressionVisitor
+public class InterbaseSqlTranslatingExpressionVisitor : RelationalSqlTranslatingExpressionVisitor
 {
-	public FbSqlTranslatingExpressionVisitor(RelationalSqlTranslatingExpressionVisitorDependencies dependencies, QueryCompilationContext queryCompilationContext, QueryableMethodTranslatingExpressionVisitor queryableMethodTranslatingExpressionVisitor)
+	public InterbaseSqlTranslatingExpressionVisitor(RelationalSqlTranslatingExpressionVisitorDependencies dependencies, QueryCompilationContext queryCompilationContext, QueryableMethodTranslatingExpressionVisitor queryableMethodTranslatingExpressionVisitor)
 		: base(dependencies, queryCompilationContext, queryableMethodTranslatingExpressionVisitor)
 	{ }
 

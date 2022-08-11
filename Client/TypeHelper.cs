@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,10 +17,10 @@
 
 using System;
 using System.Data;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using FirebirdSql.Data.Types;
 
-namespace FirebirdSql.Data.Common;
+namespace SK.InterbaseLibraryAdapter;
 
 internal static class TypeHelper
 {
@@ -375,15 +375,15 @@ internal static class TypeHelper
 
 			case DbDataType.TimeStampTZ:
 			case DbDataType.TimeStampTZEx:
-				return typeof(FbZonedDateTime);
+				return typeof(InterbaseZonedDateTime);
 
 			case DbDataType.TimeTZ:
 			case DbDataType.TimeTZEx:
-				return typeof(FbZonedTime);
+				return typeof(InterbaseZonedTime);
 
 			case DbDataType.Dec16:
 			case DbDataType.Dec34:
-				return typeof(FbDecFloat);
+				return typeof(InterbaseDecFloat);
 
 			case DbDataType.Int128:
 				return typeof(System.Numerics.BigInteger);
@@ -393,96 +393,96 @@ internal static class TypeHelper
 		}
 	}
 
-	public static FbDbType GetFbDataTypeFromType(Type type)
+	public static InterbaseDbType GetInterbaseDataTypeFromType(Type type)
 	{
 		if (type.IsEnum)
 		{
-			return GetFbDataTypeFromType(Enum.GetUnderlyingType(type));
+			return GetInterbaseDataTypeFromType(Enum.GetUnderlyingType(type));
 		}
 
 		if (type == typeof(System.DBNull))
 		{
-			return FbDbType.VarChar;
+			return InterbaseDbType.VarChar;
 		}
 
 		if (type == typeof(System.String))
 		{
-			return FbDbType.VarChar;
+			return InterbaseDbType.VarChar;
 		}
 		else if (type == typeof(System.Char))
 		{
-			return FbDbType.Char;
+			return InterbaseDbType.Char;
 		}
 		else if (type == typeof(System.Boolean))
 		{
-			return FbDbType.Boolean;
+			return InterbaseDbType.Boolean;
 		}
 		else if (type == typeof(System.Byte) || type == typeof(System.SByte) || type == typeof(System.Int16) || type == typeof(System.UInt16))
 		{
-			return FbDbType.SmallInt;
+			return InterbaseDbType.SmallInt;
 		}
 		else if (type == typeof(System.Int32) || type == typeof(System.UInt32))
 		{
-			return FbDbType.Integer;
+			return InterbaseDbType.Integer;
 		}
 		else if (type == typeof(System.Int64) || type == typeof(System.UInt64))
 		{
-			return FbDbType.BigInt;
+			return InterbaseDbType.BigInt;
 		}
 		else if (type == typeof(System.Single))
 		{
-			return FbDbType.Float;
+			return InterbaseDbType.Float;
 		}
 		else if (type == typeof(System.Double))
 		{
-			return FbDbType.Double;
+			return InterbaseDbType.Double;
 		}
 		else if (type == typeof(System.Decimal))
 		{
-			return FbDbType.Decimal;
+			return InterbaseDbType.Decimal;
 		}
 		else if (type == typeof(System.DateTime))
 		{
-			return FbDbType.TimeStamp;
+			return InterbaseDbType.TimeStamp;
 		}
 		else if (type == typeof(System.TimeSpan))
 		{
-			return FbDbType.Time;
+			return InterbaseDbType.Time;
 		}
 		else if (type == typeof(System.Guid))
 		{
-			return FbDbType.Guid;
+			return InterbaseDbType.Guid;
 		}
-		else if (type == typeof(FbZonedDateTime))
+		else if (type == typeof(InterbaseZonedDateTime))
 		{
-			return FbDbType.TimeStampTZ;
+			return InterbaseDbType.TimeStampTZ;
 		}
-		else if (type == typeof(FbZonedTime))
+		else if (type == typeof(InterbaseZonedTime))
 		{
-			return FbDbType.TimeTZ;
+			return InterbaseDbType.TimeTZ;
 		}
-		else if (type == typeof(FbDecFloat))
+		else if (type == typeof(InterbaseDecFloat))
 		{
-			return FbDbType.Dec34;
+			return InterbaseDbType.Dec34;
 		}
 		else if (type == typeof(System.Numerics.BigInteger))
 		{
-			return FbDbType.Int128;
+			return InterbaseDbType.Int128;
 		}
 		else if (type == typeof(System.Byte[]))
 		{
-			return FbDbType.Binary;
+			return InterbaseDbType.Binary;
 		}
 #if NET6_0_OR_GREATER
 		else if (type == typeof(System.DateOnly))
 		{
-			return FbDbType.Date;
+			return InterbaseDbType.Date;
 		}
 #endif
 #if NET6_0_OR_GREATER
 		else if (type == typeof(System.TimeOnly))
 		{
-			return FbDbType.Time;
+			return InterbaseDbType.Time;
 		}
 #endif
 		else
@@ -784,7 +784,7 @@ internal static class TypeHelper
 		}
 	}
 
-	public static DbDataType GetDbDataTypeFromFbDbType(FbDbType type)
+	public static DbDataType GetDbDataTypeFromInterbaseDbType(InterbaseDbType type)
 	{
 		// these are aligned for this conversion
 		return (DbDataType)type;
@@ -795,22 +795,22 @@ internal static class TypeHelper
 		return TimeSpan.FromTicks(d.Subtract(d.Date).Ticks);
 	}
 
-	public static FbZonedDateTime CreateZonedDateTime(DateTime dateTime, ushort tzId, short? offset)
+	public static InterbaseZonedDateTime CreateZonedDateTime(DateTime dateTime, ushort tzId, short? offset)
 	{
 		if (!TimeZoneMapping.TryGetById(tzId, out var tz))
 		{
 			throw new ArgumentException("Unknown time zone ID.");
 		}
-		return new FbZonedDateTime(dateTime, tz, offset != null ? TimeSpan.FromMinutes((short)offset) : (TimeSpan?)null);
+		return new InterbaseZonedDateTime(dateTime, tz, offset != null ? TimeSpan.FromMinutes((short)offset) : (TimeSpan?)null);
 	}
 
-	public static FbZonedTime CreateZonedTime(TimeSpan time, ushort tzId, short? offset)
+	public static InterbaseZonedTime CreateZonedTime(TimeSpan time, ushort tzId, short? offset)
 	{
 		if (!TimeZoneMapping.TryGetById(tzId, out var tz))
 		{
 			throw new ArgumentException("Unknown time zone ID.");
 		}
-		return new FbZonedTime(time, tz, offset != null ? TimeSpan.FromMinutes((short)offset) : (TimeSpan?)null);
+		return new InterbaseZonedTime(time, tz, offset != null ? TimeSpan.FromMinutes((short)offset) : (TimeSpan?)null);
 	}
 
 	public static Exception InvalidDataType(int type)

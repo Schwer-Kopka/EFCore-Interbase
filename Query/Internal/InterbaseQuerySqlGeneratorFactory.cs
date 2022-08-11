@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -15,22 +15,22 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
-using FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure.Internal;
+using SK.EntityFrameworkCore.Interbase.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.Internal;
 
-public class FbQuerySqlGeneratorFactory : IQuerySqlGeneratorFactory
+public class InterbaseQuerySqlGeneratorFactory : IQuerySqlGeneratorFactory
 {
 	readonly QuerySqlGeneratorDependencies _dependencies;
-	readonly IFbOptions _fbOptions;
+	readonly IInterbaseOptions _interbaseOptions;
 
-	public FbQuerySqlGeneratorFactory(QuerySqlGeneratorDependencies dependencies, IFbOptions fbOptions)
+	public InterbaseQuerySqlGeneratorFactory(QuerySqlGeneratorDependencies dependencies, IInterbaseOptions interbaseOptions)
 	{
 		_dependencies = dependencies;
-		_fbOptions = fbOptions;
+		_interbaseOptions = interbaseOptions;
 	}
 
 	public QuerySqlGenerator Create()
-		  => new FbQuerySqlGenerator(_dependencies, _fbOptions);
+		  => new InterbaseQuerySqlGenerator(_dependencies, _interbaseOptions);
 }

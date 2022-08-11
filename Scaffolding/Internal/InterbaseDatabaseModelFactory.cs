@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using FirebirdSql.Data.Services;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -28,15 +28,15 @@ using Microsoft.EntityFrameworkCore.Scaffolding;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.Extensions.Logging;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Scaffolding.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Scaffolding.Internal;
 
-public class FbDatabaseModelFactory : DatabaseModelFactory
+public class InterbaseDatabaseModelFactory : DatabaseModelFactory
 {
 	public int MajorVersionNumber { get; private set; }
 
 	public override DatabaseModel Create(string connectionString, DatabaseModelFactoryOptions options)
 	{
-		using (var connection = new FbConnection(connectionString))
+		using (var connection = new InterbaseConnection(connectionString))
 		{
 			return Create(connection, options);
 		}
@@ -52,7 +52,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			connection.Open();
 		}
 
-		var serverVersion = FbServerProperties.ParseServerVersion(connection.ServerVersion);
+		var serverVersion = InterbaseServerProperties.ParseServerVersion(connection.ServerVersion);
 		MajorVersionNumber = serverVersion.Major;
 
 		try

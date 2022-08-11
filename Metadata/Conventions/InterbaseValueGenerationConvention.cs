@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -15,24 +15,24 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Internal;
+using SK.EntityFrameworkCore.Interbase.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Conventions;
+namespace SK.EntityFrameworkCore.Interbase.Metadata.Conventions;
 
-public class FbValueGenerationConvention : RelationalValueGenerationConvention
+public class InterbaseValueGenerationConvention : RelationalValueGenerationConvention
 {
-	public FbValueGenerationConvention(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
+	public InterbaseValueGenerationConvention(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
 		: base(dependencies, relationalDependencies)
 	{ }
 
 	public override void ProcessPropertyAnnotationChanged(IConventionPropertyBuilder propertyBuilder, string name, IConventionAnnotation annotation, IConventionAnnotation oldAnnotation, IConventionContext<IConventionAnnotation> context)
 	{
-		if (name == FbAnnotationNames.ValueGenerationStrategy)
+		if (name == InterbaseAnnotationNames.ValueGenerationStrategy)
 		{
 			propertyBuilder.ValueGenerated(GetValueGenerated(propertyBuilder.Metadata));
 			return;
@@ -42,7 +42,7 @@ public class FbValueGenerationConvention : RelationalValueGenerationConvention
 
 	protected override ValueGenerated? GetValueGenerated(IConventionProperty property)
 		=> RelationalValueGenerationConvention.GetValueGenerated(property)
-			?? (property.GetValueGenerationStrategy() != FbValueGenerationStrategy.None
+			?? (property.GetValueGenerationStrategy() != InterbaseValueGenerationStrategy.None
 				? ValueGenerated.OnAdd
 				: (ValueGenerated?)null);
 }

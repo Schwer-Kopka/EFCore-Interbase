@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -20,11 +20,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Conventions;
+namespace SK.EntityFrameworkCore.Interbase.Metadata.Conventions;
 
-public class FbConventionSetBuilder : RelationalConventionSetBuilder
+public class InterbaseConventionSetBuilder : RelationalConventionSetBuilder
 {
-	public FbConventionSetBuilder(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
+	public InterbaseConventionSetBuilder(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
 		: base(dependencies, relationalDependencies)
 	{ }
 
@@ -32,17 +32,17 @@ public class FbConventionSetBuilder : RelationalConventionSetBuilder
 	{
 		var conventionSet = base.CreateConventionSet();
 
-		var valueGenerationStrategyConvention = new FbValueGenerationStrategyConvention(Dependencies, RelationalDependencies);
+		var valueGenerationStrategyConvention = new InterbaseValueGenerationStrategyConvention(Dependencies, RelationalDependencies);
 		conventionSet.ModelInitializedConventions.Add(valueGenerationStrategyConvention);
 		conventionSet.ModelInitializedConventions.Add(new RelationalMaxIdentifierLengthConvention(31, Dependencies, RelationalDependencies));
 
-		var valueGenerationConvention = new FbValueGenerationConvention(Dependencies, RelationalDependencies);
+		var valueGenerationConvention = new InterbaseValueGenerationConvention(Dependencies, RelationalDependencies);
 		ReplaceConvention(conventionSet.EntityTypeBaseTypeChangedConventions, valueGenerationConvention);
 		ReplaceConvention(conventionSet.EntityTypePrimaryKeyChangedConventions, valueGenerationConvention);
 		ReplaceConvention(conventionSet.ForeignKeyAddedConventions, valueGenerationConvention);
 		ReplaceConvention(conventionSet.ForeignKeyRemovedConventions, valueGenerationConvention);
 
-		var storeGenerationConvention = new FbStoreGenerationConvention(Dependencies, RelationalDependencies);
+		var storeGenerationConvention = new InterbaseStoreGenerationConvention(Dependencies, RelationalDependencies);
 		ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, storeGenerationConvention);
 		ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, (RelationalValueGenerationConvention)valueGenerationConvention);
 
@@ -55,8 +55,8 @@ public class FbConventionSetBuilder : RelationalConventionSetBuilder
 	public static ConventionSet Build()
 	{
 		var serviceProvider = new ServiceCollection()
-			.AddEntityFrameworkFirebird()
-			.AddDbContext<DbContext>(o => o.UseFirebird("database=localhost:_.fdb;user=sysdba;password=masterkey;charset=utf8"))
+			.AddEntityFrameworkInterbase()
+			.AddDbContext<DbContext>(o => o.UseInterbase("database=localhost:_.fdb;user=sysdba;password=masterkey;charset=utf8"))
 			.BuildServiceProvider();
 
 		using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())

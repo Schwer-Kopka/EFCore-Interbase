@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -15,37 +15,37 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata;
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Internal;
+using SK.EntityFrameworkCore.Interbase.Metadata;
+using SK.EntityFrameworkCore.Interbase.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Microsoft.EntityFrameworkCore;
 
-public static class FbModelBuilderExtensions
+public static class InterbaseModelBuilderExtensions
 {
 	public static ModelBuilder UseIdentityColumns(this ModelBuilder modelBuilder)
 	{
 		var model = modelBuilder.Model;
-		model.SetValueGenerationStrategy(FbValueGenerationStrategy.IdentityColumn);
+		model.SetValueGenerationStrategy(InterbaseValueGenerationStrategy.IdentityColumn);
 		return modelBuilder;
 	}
 
 	public static ModelBuilder UseSequenceTriggers(this ModelBuilder modelBuilder)
 	{
 		var model = modelBuilder.Model;
-		model.SetValueGenerationStrategy(FbValueGenerationStrategy.SequenceTrigger);
+		model.SetValueGenerationStrategy(InterbaseValueGenerationStrategy.SequenceTrigger);
 		return modelBuilder;
 	}
 
-	public static IConventionModelBuilder HasValueGenerationStrategy(this IConventionModelBuilder modelBuilder, FbValueGenerationStrategy? valueGenerationStrategy, bool fromDataAnnotation = false)
+	public static IConventionModelBuilder HasValueGenerationStrategy(this IConventionModelBuilder modelBuilder, InterbaseValueGenerationStrategy? valueGenerationStrategy, bool fromDataAnnotation = false)
 	{
-		if (modelBuilder.CanSetAnnotation(FbAnnotationNames.ValueGenerationStrategy, valueGenerationStrategy, fromDataAnnotation))
+		if (modelBuilder.CanSetAnnotation(InterbaseAnnotationNames.ValueGenerationStrategy, valueGenerationStrategy, fromDataAnnotation))
 		{
 			modelBuilder.Metadata.SetValueGenerationStrategy(valueGenerationStrategy, fromDataAnnotation);
-			if (valueGenerationStrategy != FbValueGenerationStrategy.IdentityColumn)
+			if (valueGenerationStrategy != InterbaseValueGenerationStrategy.IdentityColumn)
 			{
 			}
-			if (valueGenerationStrategy != FbValueGenerationStrategy.SequenceTrigger)
+			if (valueGenerationStrategy != InterbaseValueGenerationStrategy.SequenceTrigger)
 			{
 			}
 			return modelBuilder;

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,15 +18,15 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbDateAddTranslator : IMethodCallTranslator
+public class InterbaseDateAddTranslator : IMethodCallTranslator
 {
 	static readonly Dictionary<MethodInfo, string> MethodInfoDatePartMapping = new Dictionary<MethodInfo, string>
 		{
@@ -46,11 +46,11 @@ public class FbDateAddTranslator : IMethodCallTranslator
 			{  typeof(TimeOnly).GetRuntimeMethod(nameof(TimeOnly.AddMinutes), new[] { typeof(double) }), "MINUTE" },
 		};
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbDateAddTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseDateAddTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -58,9 +58,9 @@ public class FbDateAddTranslator : IMethodCallTranslator
 		if (!MethodInfoDatePartMapping.TryGetValue(method, out var part))
 			return null;
 
-		return _fbSqlExpressionFactory.ApplyDefaultTypeMapping(_fbSqlExpressionFactory.Function(
+		return _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.Function(
 			"DATEADD",
-			new[] { _fbSqlExpressionFactory.Fragment(part), _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), instance },
+			new[] { _interbaseSqlExpressionFactory.Fragment(part), _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), instance },
 			true,
 			new[] { false, true, true },
 			instance.Type));

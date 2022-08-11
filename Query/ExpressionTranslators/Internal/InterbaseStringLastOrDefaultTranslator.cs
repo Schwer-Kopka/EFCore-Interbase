@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,25 +18,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringLastOrDefaultTranslator : IMethodCallTranslator
+public class InterbaseStringLastOrDefaultTranslator : IMethodCallTranslator
 {
 	static readonly MethodInfo MethodInfo = typeof(Enumerable).GetRuntimeMethods()
 		.Single(m => m.Name == nameof(Enumerable.LastOrDefault) && m.GetParameters().Length == 1)
 		.MakeGenericMethod(typeof(char));
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringLastOrDefaultTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringLastOrDefaultTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -44,10 +44,10 @@ public class FbStringLastOrDefaultTranslator : IMethodCallTranslator
 		if (!method.Equals(MethodInfo))
 			return null;
 
-		var argument = _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
-		return _fbSqlExpressionFactory.Function(
+		var argument = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
+		return _interbaseSqlExpressionFactory.Function(
 			"RIGHT",
-			new[] { argument, _fbSqlExpressionFactory.Constant(1) },
+			new[] { argument, _interbaseSqlExpressionFactory.Constant(1) },
 			true,
 			new[] { true, false },
 			typeof(string));

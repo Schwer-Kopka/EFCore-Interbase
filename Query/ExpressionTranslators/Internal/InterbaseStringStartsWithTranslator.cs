@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,23 +17,23 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringStartsWithTranslator : IMethodCallTranslator
+public class InterbaseStringStartsWithTranslator : IMethodCallTranslator
 {
 	static readonly MethodInfo StartsWithMethod = typeof(string).GetRuntimeMethod(nameof(string.StartsWith), new[] { typeof(string) });
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringStartsWithTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringStartsWithTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -41,17 +41,17 @@ public class FbStringStartsWithTranslator : IMethodCallTranslator
 		if (!method.Equals(StartsWithMethod))
 			return null;
 
-		var patternExpression = _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
-		var startsWithExpression = _fbSqlExpressionFactory.AndAlso(
-			_fbSqlExpressionFactory.Like(
+		var patternExpression = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
+		var startsWithExpression = _interbaseSqlExpressionFactory.AndAlso(
+			_interbaseSqlExpressionFactory.Like(
 				instance,
-				_fbSqlExpressionFactory.Add(patternExpression, _fbSqlExpressionFactory.Constant("%"))),
-			_fbSqlExpressionFactory.Equal(
-				_fbSqlExpressionFactory.ApplyDefaultTypeMapping(_fbSqlExpressionFactory.Function(
+				_interbaseSqlExpressionFactory.Add(patternExpression, _interbaseSqlExpressionFactory.Constant("%"))),
+			_interbaseSqlExpressionFactory.Equal(
+				_interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.Function(
 					"LEFT",
 					new[] {
 							instance,
-							_fbSqlExpressionFactory.Function(
+							_interbaseSqlExpressionFactory.Function(
 								"CHAR_LENGTH",
 								new[] { patternExpression },
 								true,
@@ -63,12 +63,12 @@ public class FbStringStartsWithTranslator : IMethodCallTranslator
 				patternExpression));
 		return patternExpression is SqlConstantExpression sqlConstantExpression
 			? (string)sqlConstantExpression.Value == string.Empty
-				? (SqlExpression)_fbSqlExpressionFactory.Constant(true)
+				? (SqlExpression)_interbaseSqlExpressionFactory.Constant(true)
 				: startsWithExpression
-			: _fbSqlExpressionFactory.OrElse(
+			: _interbaseSqlExpressionFactory.OrElse(
 				startsWithExpression,
-				_fbSqlExpressionFactory.Equal(
+				_interbaseSqlExpressionFactory.Equal(
 					patternExpression,
-					_fbSqlExpressionFactory.Constant(string.Empty)));
+					_interbaseSqlExpressionFactory.Constant(string.Empty)));
 	}
 }

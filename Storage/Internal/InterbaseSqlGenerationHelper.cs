@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -19,11 +19,11 @@ using System;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbSqlGenerationHelper : RelationalSqlGenerationHelper, IFbSqlGenerationHelper
+public class InterbaseSqlGenerationHelper : RelationalSqlGenerationHelper, IInterbaseSqlGenerationHelper
 {
-	public FbSqlGenerationHelper(RelationalSqlGenerationHelperDependencies dependencies)
+	public InterbaseSqlGenerationHelper(RelationalSqlGenerationHelperDependencies dependencies)
 		: base(dependencies)
 	{ }
 
@@ -36,7 +36,7 @@ public class FbSqlGenerationHelper : RelationalSqlGenerationHelper, IFbSqlGenera
 
 	public virtual string StringParameterQueryType(bool isUnicode)
 	{
-		var size = isUnicode ? FbTypeMappingSource.UnicodeVarcharMaxSize : FbTypeMappingSource.VarcharMaxSize;
+		var size = isUnicode ? InterbaseTypeMappingSource.UnicodeVarcharMaxSize : InterbaseTypeMappingSource.VarcharMaxSize;
 		return $"VARCHAR({size})";
 	}
 
@@ -57,7 +57,7 @@ public class FbSqlGenerationHelper : RelationalSqlGenerationHelper, IFbSqlGenera
 
 	static void EnsureStringLiteralQueryTypeLength(int length)
 	{
-		if (length > FbTypeMappingSource.UnicodeVarcharMaxSize)
+		if (length > InterbaseTypeMappingSource.UnicodeVarcharMaxSize)
 			throw new ArgumentOutOfRangeException(nameof(length));
 	}
 }

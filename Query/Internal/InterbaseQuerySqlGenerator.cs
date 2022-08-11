@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -20,23 +20,23 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Expressions.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+using SK.EntityFrameworkCore.Interbase.Infrastructure.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Expressions.Internal;
+using SK.EntityFrameworkCore.Interbase.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.Internal;
 
-public class FbQuerySqlGenerator : QuerySqlGenerator
+public class InterbaseQuerySqlGenerator : QuerySqlGenerator
 {
-	readonly IFbOptions _fbOptions;
+	readonly IInterbaseOptions _interbaseOptions;
 
-	public FbQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies, IFbOptions fbOptions)
+	public InterbaseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies, IInterbaseOptions interbaseOptions)
 		: base(dependencies)
 	{
-		_fbOptions = fbOptions;
+		_interbaseOptions = interbaseOptions;
 	}
 
 	protected override Expression VisitSqlBinary(SqlBinaryExpression sqlBinaryExpression)
@@ -103,7 +103,7 @@ public class FbQuerySqlGenerator : QuerySqlGenerator
 
 	protected override Expression VisitSqlParameter(SqlParameterExpression sqlParameterExpression)
 	{
-		var shouldExplicitParameterTypes = _fbOptions.ExplicitParameterTypes;
+		var shouldExplicitParameterTypes = _interbaseOptions.ExplicitParameterTypes;
 		if (shouldExplicitParameterTypes)
 		{
 			Sql.Append("CAST(");
@@ -114,8 +114,8 @@ public class FbQuerySqlGenerator : QuerySqlGenerator
 			Sql.Append(" AS ");
 			if (sqlParameterExpression.Type == typeof(string))
 			{
-				var isUnicode = FbTypeMappingSource.IsUnicode(sqlParameterExpression.TypeMapping);
-				Sql.Append(((IFbSqlGenerationHelper)Dependencies.SqlGenerationHelper).StringParameterQueryType(isUnicode));
+				var isUnicode = InterbaseTypeMappingSource.IsUnicode(sqlParameterExpression.TypeMapping);
+				Sql.Append(((IInterbaseSqlGenerationHelper)Dependencies.SqlGenerationHelper).StringParameterQueryType(isUnicode));
 			}
 			else
 			{
@@ -128,7 +128,7 @@ public class FbQuerySqlGenerator : QuerySqlGenerator
 
 	protected override Expression VisitSqlConstant(SqlConstantExpression sqlConstantExpression)
 	{
-		var shouldExplicitStringLiteralTypes = _fbOptions.ExplicitStringLiteralTypes && sqlConstantExpression.Type == typeof(string);
+		var shouldExplicitStringLiteralTypes = _interbaseOptions.ExplicitStringLiteralTypes && sqlConstantExpression.Type == typeof(string);
 		if (shouldExplicitStringLiteralTypes)
 		{
 			Sql.Append("CAST(");
@@ -137,7 +137,7 @@ public class FbQuerySqlGenerator : QuerySqlGenerator
 		if (shouldExplicitStringLiteralTypes)
 		{
 			Sql.Append(" AS ");
-			Sql.Append(((IFbSqlGenerationHelper)Dependencies.SqlGenerationHelper).StringLiteralQueryType(sqlConstantExpression.Value as string));
+			Sql.Append(((IInterbaseSqlGenerationHelper)Dependencies.SqlGenerationHelper).StringLiteralQueryType(sqlConstantExpression.Value as string));
 			Sql.Append(")");
 		}
 		return sqlConstantExpression;
@@ -263,12 +263,12 @@ public class FbQuerySqlGenerator : QuerySqlGenerator
 	{
 		return extensionExpression switch
 		{
-			FbSpacedFunctionExpression spacedFunctionExpression => VisitSpacedFunction(spacedFunctionExpression),
+			InterbaseSpacedFunctionExpression spacedFunctionExpression => VisitSpacedFunction(spacedFunctionExpression),
 			_ => base.VisitExtension(extensionExpression),
 		};
 	}
 
-	public virtual Expression VisitSpacedFunction(FbSpacedFunctionExpression spacedFunctionExpression)
+	public virtual Expression VisitSpacedFunction(InterbaseSpacedFunctionExpression spacedFunctionExpression)
 	{
 		Sql.Append(spacedFunctionExpression.Name);
 		Sql.Append("(");

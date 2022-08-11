@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,30 +17,30 @@
 
 using System;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbDateTimeDateComponentTranslator : IMemberTranslator
+public class InterbaseDateTimeDateComponentTranslator : IMemberTranslator
 {
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbDateTimeDateComponentTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseDateTimeDateComponentTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 	{
 		if (member.DeclaringType == typeof(DateTime) && member.Name == nameof(DateTime.Date))
 		{
-			return _fbSqlExpressionFactory.SpacedFunction(
+			return _interbaseSqlExpressionFactory.SpacedFunction(
 				"CAST",
-				new[] { instance, _fbSqlExpressionFactory.Fragment("AS"), _fbSqlExpressionFactory.Fragment("DATE") },
+				new[] { instance, _interbaseSqlExpressionFactory.Fragment("AS"), _interbaseSqlExpressionFactory.Fragment("DATE") },
 				true,
 				new[] { true, false, false },
 				typeof(DateTime));

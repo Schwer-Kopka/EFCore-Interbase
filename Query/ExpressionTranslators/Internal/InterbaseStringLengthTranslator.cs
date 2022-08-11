@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,28 +17,28 @@
 
 using System;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringLengthTranslator : IMemberTranslator
+public class InterbaseStringLengthTranslator : IMemberTranslator
 {
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringLengthTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringLengthTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 	{
 		if (member.DeclaringType == typeof(string) && member.Name == nameof(string.Length))
 		{
-			return _fbSqlExpressionFactory.Function("CHAR_LENGTH", new[] { instance }, true, new[] { true }, typeof(int));
+			return _interbaseSqlExpressionFactory.Function("CHAR_LENGTH", new[] { instance }, true, new[] { true }, typeof(int));
 		}
 		return null;
 	}

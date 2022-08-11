@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,24 +17,24 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringSubstringTranslator : IMethodCallTranslator
+public class InterbaseStringSubstringTranslator : IMethodCallTranslator
 {
 	static readonly MethodInfo SubstringOnlyStartMethod = typeof(string).GetRuntimeMethod(nameof(string.Substring), new[] { typeof(int) });
 	static readonly MethodInfo SubstringStartAndLengthMethod = typeof(string).GetRuntimeMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringSubstringTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringSubstringTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -42,15 +42,15 @@ public class FbStringSubstringTranslator : IMethodCallTranslator
 		if (!(method.Equals(SubstringOnlyStartMethod) || method.Equals(SubstringStartAndLengthMethod)))
 			return null;
 
-		var fromExpression = _fbSqlExpressionFactory.ApplyDefaultTypeMapping(_fbSqlExpressionFactory.Add(arguments[0], _fbSqlExpressionFactory.Constant(1)));
-		var forExpression = arguments.Count == 2 ? _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[1]) : null;
+		var fromExpression = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(_interbaseSqlExpressionFactory.Add(arguments[0], _interbaseSqlExpressionFactory.Constant(1)));
+		var forExpression = arguments.Count == 2 ? _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[1]) : null;
 		var substringArguments = forExpression != null
-			? new[] { instance, _fbSqlExpressionFactory.Fragment("FROM"), fromExpression, _fbSqlExpressionFactory.Fragment("FOR"), forExpression }
-			: new[] { instance, _fbSqlExpressionFactory.Fragment("FROM"), fromExpression };
+			? new[] { instance, _interbaseSqlExpressionFactory.Fragment("FROM"), fromExpression, _interbaseSqlExpressionFactory.Fragment("FOR"), forExpression }
+			: new[] { instance, _interbaseSqlExpressionFactory.Fragment("FROM"), fromExpression };
 		var nullability = forExpression != null
 			? new[] { true, false, true, false, true }
 			: new[] { true, false, true };
-		return _fbSqlExpressionFactory.SpacedFunction(
+		return _interbaseSqlExpressionFactory.SpacedFunction(
 			"SUBSTRING",
 			substringArguments,
 			true,

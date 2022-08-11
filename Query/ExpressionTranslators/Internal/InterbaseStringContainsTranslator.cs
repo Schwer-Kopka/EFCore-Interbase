@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,23 +17,23 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringContainsTranslator : IMethodCallTranslator
+public class InterbaseStringContainsTranslator : IMethodCallTranslator
 {
 	static readonly MethodInfo MethodInfo = typeof(string).GetRuntimeMethod(nameof(string.Contains), new[] { typeof(string) });
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringContainsTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringContainsTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -41,23 +41,23 @@ public class FbStringContainsTranslator : IMethodCallTranslator
 		if (!method.Equals(MethodInfo))
 			return null;
 
-		var patternExpression = _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
-		var positionExpression = _fbSqlExpressionFactory.GreaterThan(
-			_fbSqlExpressionFactory.Function(
+		var patternExpression = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
+		var positionExpression = _interbaseSqlExpressionFactory.GreaterThan(
+			_interbaseSqlExpressionFactory.Function(
 				"POSITION",
 				new[] { patternExpression, instance },
 				true,
 				new[] { true, true },
 				typeof(int)),
-			_fbSqlExpressionFactory.Constant(0));
+			_interbaseSqlExpressionFactory.Constant(0));
 		return patternExpression is SqlConstantExpression sqlConstantExpression
 			? ((string)sqlConstantExpression.Value)?.Length == 0
-				? (SqlExpression)_fbSqlExpressionFactory.Constant(true)
+				? (SqlExpression)_interbaseSqlExpressionFactory.Constant(true)
 				: positionExpression
-			: _fbSqlExpressionFactory.OrElse(
+			: _interbaseSqlExpressionFactory.OrElse(
 				positionExpression,
-				_fbSqlExpressionFactory.Equal(
+				_interbaseSqlExpressionFactory.Equal(
 					patternExpression,
-					_fbSqlExpressionFactory.Constant(string.Empty)));
+					_interbaseSqlExpressionFactory.Constant(string.Empty)));
 	}
 }

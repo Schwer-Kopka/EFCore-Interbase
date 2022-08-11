@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,16 +18,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FirebirdSql.EntityFrameworkCore.Firebird.Utilities;
+using SK.EntityFrameworkCore.Interbase.Utilities;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbMethodCallTranslatorProvider : RelationalMethodCallTranslatorProvider
+public class InterbaseMethodCallTranslatorProvider : RelationalMethodCallTranslatorProvider
 {
 	static readonly List<Type> Translators = TranslatorsHelper.GetTranslators<IMethodCallTranslator>().ToList();
 
-	public FbMethodCallTranslatorProvider(RelationalMethodCallTranslatorProviderDependencies dependencies)
+	public InterbaseMethodCallTranslatorProvider(RelationalMethodCallTranslatorProviderDependencies dependencies)
 		: base(dependencies)
 	{
 		AddTranslators(Translators.Select(t => (IMethodCallTranslator)Activator.CreateInstance(t, dependencies.SqlExpressionFactory)));

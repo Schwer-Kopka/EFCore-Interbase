@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,23 +17,23 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbStringIsNullOrWhiteSpaceTranslator : IMethodCallTranslator
+public class InterbaseStringIsNullOrWhiteSpaceTranslator : IMethodCallTranslator
 {
 	static readonly MethodInfo IsNullOrWhiteSpaceMethod = typeof(string).GetRuntimeMethod(nameof(string.IsNullOrWhiteSpace), new[] { typeof(string) });
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbStringIsNullOrWhiteSpaceTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseStringIsNullOrWhiteSpaceTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -41,12 +41,12 @@ public class FbStringIsNullOrWhiteSpaceTranslator : IMethodCallTranslator
 		if (!method.Equals(IsNullOrWhiteSpaceMethod))
 			return null;
 
-		var argument = _fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
-		return _fbSqlExpressionFactory.OrElse(
-			_fbSqlExpressionFactory.IsNull(argument),
-			_fbSqlExpressionFactory.Equal(
-				_fbSqlExpressionFactory.Function("TRIM", new[] { argument }, true, new[] { true }, typeof(string)),
-				_fbSqlExpressionFactory.Constant(string.Empty))
+		var argument = _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]);
+		return _interbaseSqlExpressionFactory.OrElse(
+			_interbaseSqlExpressionFactory.IsNull(argument),
+			_interbaseSqlExpressionFactory.Equal(
+				_interbaseSqlExpressionFactory.Function("TRIM", new[] { argument }, true, new[] { true }, typeof(string)),
+				_interbaseSqlExpressionFactory.Constant(string.Empty))
 			);
 	}
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Storage.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbConvertTranslator : IMethodCallTranslator
+public class InterbaseConvertTranslator : IMethodCallTranslator
 {
 	static readonly List<string> Mappings = new List<string>
 	{
@@ -60,11 +60,11 @@ public class FbConvertTranslator : IMethodCallTranslator
 			.SelectMany(t => typeof(Convert).GetTypeInfo().GetDeclaredMethods(t)
 				.Where(m => m.GetParameters().Length == 1 && SupportedTypes.Contains(m.GetParameters().First().ParameterType)));
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbConvertTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseConvertTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -72,7 +72,7 @@ public class FbConvertTranslator : IMethodCallTranslator
 		if (!SupportedMethods.Contains(method))
 			return null;
 
-		return _fbSqlExpressionFactory.ApplyDefaultTypeMapping(
-			_fbSqlExpressionFactory.Convert(_fbSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), method.ReturnType));
+		return _interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(
+			_interbaseSqlExpressionFactory.Convert(_interbaseSqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]), method.ReturnType));
 	}
 }

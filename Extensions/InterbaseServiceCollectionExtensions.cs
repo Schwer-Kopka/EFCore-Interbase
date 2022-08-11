@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -16,19 +16,19 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System;
-using FirebirdSql.EntityFrameworkCore.Firebird;
-using FirebirdSql.EntityFrameworkCore.Firebird.Diagnostics.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure;
-using FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Conventions;
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Migrations;
-using FirebirdSql.EntityFrameworkCore.Firebird.Migrations.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Update.Internal;
+using SK.EntityFrameworkCore.Interbase;
+using SK.EntityFrameworkCore.Interbase.Diagnostics.Internal;
+using SK.EntityFrameworkCore.Interbase.Infrastructure;
+using SK.EntityFrameworkCore.Interbase.Infrastructure.Internal;
+using SK.EntityFrameworkCore.Interbase.Internal;
+using SK.EntityFrameworkCore.Interbase.Metadata.Conventions;
+using SK.EntityFrameworkCore.Interbase.Metadata.Internal;
+using SK.EntityFrameworkCore.Interbase.Migrations;
+using SK.EntityFrameworkCore.Interbase.Migrations.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Storage.Internal;
+using SK.EntityFrameworkCore.Interbase.Update.Internal;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -41,47 +41,47 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.EntityFrameworkCore;
 
-public static class FbServiceCollectionExtensions
+public static class InterbaseServiceCollectionExtensions
 {
-	public static IServiceCollection AddFirebird<TContext>(this IServiceCollection serviceCollection, string connectionString, Action<FbDbContextOptionsBuilder> fbOptionsAction = null, Action<DbContextOptionsBuilder> optionsAction = null)
+	public static IServiceCollection AddInterbase<TContext>(this IServiceCollection serviceCollection, string connectionString, Action<InterbaseDbContextOptionsBuilder> interbaseOptionsAction = null, Action<DbContextOptionsBuilder> optionsAction = null)
 		where TContext : DbContext
 	{
 		return serviceCollection.AddDbContext<TContext>(
 			(serviceProvider, options) =>
 			{
 				optionsAction?.Invoke(options);
-				options.UseFirebird(connectionString, fbOptionsAction);
+				options.UseInterbase(connectionString, interbaseOptionsAction);
 			});
 	}
 
-	public static IServiceCollection AddEntityFrameworkFirebird(this IServiceCollection serviceCollection)
+	public static IServiceCollection AddEntityFrameworkInterbase(this IServiceCollection serviceCollection)
 	{
 		var builder = new EntityFrameworkRelationalServicesBuilder(serviceCollection)
-			.TryAdd<LoggingDefinitions, FbLoggingDefinitions>()
-			.TryAdd<IDatabaseProvider, DatabaseProvider<FbOptionsExtension>>()
-			.TryAdd<IRelationalDatabaseCreator, FbDatabaseCreator>()
-			.TryAdd<IRelationalTypeMappingSource, FbTypeMappingSource>()
-			.TryAdd<ISqlGenerationHelper, FbSqlGenerationHelper>()
-			.TryAdd<IRelationalAnnotationProvider, FbRelationalAnnotationProvider>()
-			.TryAdd<IProviderConventionSetBuilder, FbConventionSetBuilder>()
-			.TryAdd<IUpdateSqlGenerator>(p => p.GetService<IFbUpdateSqlGenerator>())
-			.TryAdd<IModificationCommandBatchFactory, FbModificationCommandBatchFactory>()
-			.TryAdd<IRelationalConnection>(p => p.GetService<IFbRelationalConnection>())
-			.TryAdd<IRelationalTransactionFactory, FbTransactionFactory>()
-			.TryAdd<IMigrationsSqlGenerator, FbMigrationsSqlGenerator>()
-			.TryAdd<IHistoryRepository, FbHistoryRepository>()
-			.TryAdd<IMemberTranslatorProvider, FbMemberTranslatorProvider>()
-			.TryAdd<IMethodCallTranslatorProvider, FbMethodCallTranslatorProvider>()
-			.TryAdd<IQuerySqlGeneratorFactory, FbQuerySqlGeneratorFactory>()
-			.TryAdd<ISqlExpressionFactory, FbSqlExpressionFactory>()
-			.TryAdd<ISingletonOptions, IFbOptions>(p => p.GetService<IFbOptions>())
-			.TryAdd<IRelationalSqlTranslatingExpressionVisitorFactory, FbSqlTranslatingExpressionVisitorFactory>()
+			.TryAdd<LoggingDefinitions, InterbaseLoggingDefinitions>()
+			.TryAdd<IDatabaseProvider, DatabaseProvider<InterbaseOptionsExtension>>()
+			.TryAdd<IRelationalDatabaseCreator, InterbaseDatabaseCreator>()
+			.TryAdd<IRelationalTypeMappingSource, InterbaseTypeMappingSource>()
+			.TryAdd<ISqlGenerationHelper, InterbaseSqlGenerationHelper>()
+			.TryAdd<IRelationalAnnotationProvider, InterbaseRelationalAnnotationProvider>()
+			.TryAdd<IProviderConventionSetBuilder, InterbaseConventionSetBuilder>()
+			.TryAdd<IUpdateSqlGenerator>(p => p.GetService<IInterbaseUpdateSqlGenerator>())
+			.TryAdd<IModificationCommandBatchFactory, InterbaseModificationCommandBatchFactory>()
+			.TryAdd<IRelationalConnection>(p => p.GetService<IInterbaseRelationalConnection>())
+			.TryAdd<IRelationalTransactionFactory, InterbaseTransactionFactory>()
+			.TryAdd<IMigrationsSqlGenerator, InterbaseMigrationsSqlGenerator>()
+			.TryAdd<IHistoryRepository, InterbaseHistoryRepository>()
+			.TryAdd<IMemberTranslatorProvider, InterbaseMemberTranslatorProvider>()
+			.TryAdd<IMethodCallTranslatorProvider, InterbaseMethodCallTranslatorProvider>()
+			.TryAdd<IQuerySqlGeneratorFactory, InterbaseQuerySqlGeneratorFactory>()
+			.TryAdd<ISqlExpressionFactory, InterbaseSqlExpressionFactory>()
+			.TryAdd<ISingletonOptions, IInterbaseOptions>(p => p.GetService<IInterbaseOptions>())
+			.TryAdd<IRelationalSqlTranslatingExpressionVisitorFactory, InterbaseSqlTranslatingExpressionVisitorFactory>()
 			.TryAddProviderSpecificServices(b => b
-				.TryAddSingleton<IFbOptions, FbOptions>()
-				.TryAddSingleton<IFbMigrationSqlGeneratorBehavior, FbMigrationSqlGeneratorBehavior>()
-				.TryAddSingleton<IFbUpdateSqlGenerator, FbUpdateSqlGenerator>()
-				.TryAddScoped<IFbRelationalConnection, FbRelationalConnection>()
-				.TryAddScoped<IFbRelationalTransaction, FbRelationalTransaction>());
+				.TryAddSingleton<IInterbaseOptions, InterbaseOptions>()
+				.TryAddSingleton<IInterbaseMigrationSqlGeneratorBehavior, InterbaseMigrationSqlGeneratorBehavior>()
+				.TryAddSingleton<IInterbaseUpdateSqlGenerator, InterbaseUpdateSqlGenerator>()
+				.TryAddScoped<IInterbaseRelationalConnection, InterbaseRelationalConnection>()
+				.TryAddScoped<IInterbaseRelationalTransaction, InterbaseRelationalTransaction>());
 
 		builder.TryAddCoreServices();
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,47 +17,47 @@
 
 using System;
 using System.Data.Common;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbDateTimeTypeMapping : DateTimeTypeMapping
+public class InterbaseDateTimeTypeMapping : DateTimeTypeMapping
 {
-	readonly FbDbType _fbDbType;
+	readonly InterbaseDbType _interbaseDbType;
 
-	public FbDateTimeTypeMapping(string storeType, FbDbType fbDbType)
+	public InterbaseDateTimeTypeMapping(string storeType, InterbaseDbType interbaseDbType)
 		: base(storeType)
 	{
-		_fbDbType = fbDbType;
+		_interbaseDbType = interbaseDbType;
 	}
 
-	protected FbDateTimeTypeMapping(RelationalTypeMappingParameters parameters, FbDbType fbDbType)
+	protected InterbaseDateTimeTypeMapping(RelationalTypeMappingParameters parameters, InterbaseDbType interbaseDbType)
 		: base(parameters)
 	{
-		_fbDbType = fbDbType;
+		_interbaseDbType = interbaseDbType;
 	}
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = _fbDbType;
+		((InterbaseParameter)parameter).InterbaseDbType = _interbaseDbType;
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)
 	{
-		switch (_fbDbType)
+		switch (_interbaseDbType)
 		{
-			case FbDbType.TimeStamp:
+			case InterbaseDbType.TimeStamp:
 				return $"CAST('{value:yyyy-MM-dd HH:mm:ss.ffff}' AS TIMESTAMP)";
-			case FbDbType.Date:
+			case InterbaseDbType.Date:
 				return $"CAST('{value:yyyy-MM-dd}' AS DATE)";
-			case FbDbType.Time:
+			case InterbaseDbType.Time:
 				return $"CAST('{value:HH:mm:ss.ffff}' AS TIME)";
 			default:
-				throw new ArgumentOutOfRangeException(nameof(_fbDbType), $"{nameof(_fbDbType)}={_fbDbType}");
+				throw new ArgumentOutOfRangeException(nameof(_interbaseDbType), $"{nameof(_interbaseDbType)}={_interbaseDbType}");
 		}
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-		=> new FbDateTimeTypeMapping(parameters, _fbDbType);
+		=> new InterbaseDateTimeTypeMapping(parameters, _interbaseDbType);
 }

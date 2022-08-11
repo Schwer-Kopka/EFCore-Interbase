@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,18 +18,18 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbDatabaseCreator : RelationalDatabaseCreator
+public class InterbaseDatabaseCreator : RelationalDatabaseCreator
 {
-	readonly IFbRelationalConnection _connection;
+	readonly IInterbaseRelationalConnection _connection;
 	readonly IRawSqlCommandBuilder _rawSqlCommandBuilder;
 
-	public FbDatabaseCreator(RelationalDatabaseCreatorDependencies dependencies, IFbRelationalConnection connection, IRawSqlCommandBuilder rawSqlCommandBuilder)
+	public InterbaseDatabaseCreator(RelationalDatabaseCreatorDependencies dependencies, IInterbaseRelationalConnection connection, IRawSqlCommandBuilder rawSqlCommandBuilder)
 		: base(dependencies)
 	{
 		_connection = connection;
@@ -38,22 +38,22 @@ public class FbDatabaseCreator : RelationalDatabaseCreator
 
 	public override void Create()
 	{
-		FbConnection.CreateDatabase(_connection.ConnectionString);
+		InterbaseConnection.CreateDatabase(_connection.ConnectionString);
 	}
 	public override Task CreateAsync(CancellationToken cancellationToken = default)
 	{
-		return FbConnection.CreateDatabaseAsync(_connection.ConnectionString, cancellationToken: cancellationToken);
+		return InterbaseConnection.CreateDatabaseAsync(_connection.ConnectionString, cancellationToken: cancellationToken);
 	}
 
 	public override void Delete()
 	{
-		FbConnection.ClearPool((FbConnection)_connection.DbConnection);
-		FbConnection.DropDatabase(_connection.ConnectionString);
+		InterbaseConnection.ClearPool((InterbaseConnection)_connection.DbConnection);
+		InterbaseConnection.DropDatabase(_connection.ConnectionString);
 	}
 	public override Task DeleteAsync(CancellationToken cancellationToken = default)
 	{
-		FbConnection.ClearPool((FbConnection)_connection.DbConnection);
-		return FbConnection.DropDatabaseAsync(_connection.ConnectionString, cancellationToken);
+		InterbaseConnection.ClearPool((InterbaseConnection)_connection.DbConnection);
+		return InterbaseConnection.DropDatabaseAsync(_connection.ConnectionString, cancellationToken);
 	}
 
 	public override bool Exists()
@@ -63,7 +63,7 @@ public class FbDatabaseCreator : RelationalDatabaseCreator
 			_connection.Open();
 			return true;
 		}
-		catch (FbException)
+		catch (InterbaseException)
 		{
 			return false;
 		}
@@ -79,7 +79,7 @@ public class FbDatabaseCreator : RelationalDatabaseCreator
 			await _connection.OpenAsync(cancellationToken);
 			return true;
 		}
-		catch (FbException)
+		catch (InterbaseException)
 		{
 			return false;
 		}

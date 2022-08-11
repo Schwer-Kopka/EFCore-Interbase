@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -21,11 +21,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-class FbTransactionFactory : IRelationalTransactionFactory
+class InterbaseTransactionFactory : IRelationalTransactionFactory
 {
-	public FbTransactionFactory(RelationalTransactionFactoryDependencies dependencies)
+	public InterbaseTransactionFactory(RelationalTransactionFactoryDependencies dependencies)
 	{
 		Dependencies = dependencies;
 	}
@@ -33,5 +33,5 @@ class FbTransactionFactory : IRelationalTransactionFactory
 	protected virtual RelationalTransactionFactoryDependencies Dependencies { get; }
 
 	public RelationalTransaction Create(IRelationalConnection connection, DbTransaction transaction, Guid transactionId, IDiagnosticsLogger<DbLoggerCategory.Database.Transaction> logger, bool transactionOwned)
-		=> new FbRelationalTransaction(connection, transaction, transactionId, logger, transactionOwned, Dependencies.SqlGenerationHelper);
+		=> new InterbaseRelationalTransaction(connection, transaction, transactionId, logger, transactionOwned, Dependencies.SqlGenerationHelper);
 }

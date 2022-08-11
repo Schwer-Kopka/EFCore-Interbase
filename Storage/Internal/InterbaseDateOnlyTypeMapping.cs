@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,15 +17,15 @@
 
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbDateOnlyTypeMapping : DateOnlyTypeMapping
+public class InterbaseDateOnlyTypeMapping : DateOnlyTypeMapping
 {
-	public FbDateOnlyTypeMapping(string storeType)
+	public InterbaseDateOnlyTypeMapping(string storeType)
 		: base(storeType)
 	{ }
 
-	protected FbDateOnlyTypeMapping(RelationalTypeMappingParameters parameters)
+	protected InterbaseDateOnlyTypeMapping(RelationalTypeMappingParameters parameters)
 		: base(parameters)
 	{ }
 
@@ -35,5 +35,5 @@ public class FbDateOnlyTypeMapping : DateOnlyTypeMapping
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-		=> new FbDateOnlyTypeMapping(parameters);
+		=> new InterbaseDateOnlyTypeMapping(parameters);
 }

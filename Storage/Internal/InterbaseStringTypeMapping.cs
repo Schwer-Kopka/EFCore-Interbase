@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,30 +17,30 @@
 
 using System.Data;
 using System.Data.Common;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbStringTypeMapping : StringTypeMapping
+public class InterbaseStringTypeMapping : StringTypeMapping
 {
-	readonly FbDbType _fbDbType;
+	readonly InterbaseDbType _interbaseDbType;
 
-	public FbStringTypeMapping(string storeType, DbType dbType, FbDbType fbDbType, int? size = null, bool unicode = true)
+	public InterbaseStringTypeMapping(string storeType, DbType dbType, InterbaseDbType interbaseDbType, int? size = null, bool unicode = true)
 		: base(storeType, dbType, unicode: unicode, size: size)
 	{
-		_fbDbType = fbDbType;
+		_interbaseDbType = interbaseDbType;
 	}
 
-	protected FbStringTypeMapping(RelationalTypeMappingParameters parameters, FbDbType fbDbType)
+	protected InterbaseStringTypeMapping(RelationalTypeMappingParameters parameters, InterbaseDbType interbaseDbType)
 		: base(parameters)
 	{
-		_fbDbType = fbDbType;
+		_interbaseDbType = interbaseDbType;
 	}
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = _fbDbType;
+		((InterbaseParameter)parameter).InterbaseDbType = _interbaseDbType;
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)
@@ -52,5 +52,5 @@ public class FbStringTypeMapping : StringTypeMapping
 	}
 
 	protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-		=> new FbStringTypeMapping(parameters, _fbDbType);
+		=> new InterbaseStringTypeMapping(parameters, _interbaseDbType);
 }

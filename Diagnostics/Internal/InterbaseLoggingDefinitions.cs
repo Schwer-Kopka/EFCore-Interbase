@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -17,7 +17,7 @@
 
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Diagnostics.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Diagnostics.Internal;
 
-public class FbLoggingDefinitions : RelationalLoggingDefinitions
+public class InterbaseLoggingDefinitions : RelationalLoggingDefinitions
 { }

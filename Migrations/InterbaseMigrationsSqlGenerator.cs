@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,24 +18,24 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using FirebirdSql.Data.FirebirdClient;
-using FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata;
-using FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Migrations.Operations;
+using SK.InterbaseLibraryAdapter;
+using SK.EntityFrameworkCore.Interbase.Infrastructure.Internal;
+using SK.EntityFrameworkCore.Interbase.Metadata;
+using SK.EntityFrameworkCore.Interbase.Metadata.Internal;
+using SK.EntityFrameworkCore.Interbase.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Migrations;
+namespace SK.EntityFrameworkCore.Interbase.Migrations;
 
-public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
+public class InterbaseMigrationsSqlGenerator : MigrationsSqlGenerator
 {
-	readonly IFbMigrationSqlGeneratorBehavior _behavior;
-	readonly IFbOptions _options;
+	readonly IInterbaseMigrationSqlGeneratorBehavior _behavior;
+	readonly IInterbaseOptions _options;
 
-	public FbMigrationsSqlGenerator(MigrationsSqlGeneratorDependencies dependencies, IFbMigrationSqlGeneratorBehavior behavior, IFbOptions options)
+	public InterbaseMigrationsSqlGenerator(MigrationsSqlGeneratorDependencies dependencies, IInterbaseMigrationSqlGeneratorBehavior behavior, IInterbaseOptions options)
 		: base(dependencies)
 	{
 		_behavior = behavior;
@@ -46,10 +46,10 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 	{
 		switch (operation)
 		{
-			case FbCreateDatabaseOperation createDatabaseOperation:
+			case InterbaseCreateDatabaseOperation createDatabaseOperation:
 				Generate(createDatabaseOperation, model, builder);
 				break;
-			case FbDropDatabaseOperation dropDatabaseOperation:
+			case InterbaseDropDatabaseOperation dropDatabaseOperation:
 				Generate(dropDatabaseOperation, model, builder);
 				break;
 			default:
@@ -65,8 +65,8 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 		var columns = operation.Columns.Where(p => !p.IsNullable && string.IsNullOrWhiteSpace(p.DefaultValueSql) && p.DefaultValue == null);
 		foreach (var column in columns)
 		{
-			var valueGenerationStrategy = column[FbAnnotationNames.ValueGenerationStrategy] as FbValueGenerationStrategy?;
-			if (valueGenerationStrategy == FbValueGenerationStrategy.SequenceTrigger)
+			var valueGenerationStrategy = column[InterbaseAnnotationNames.ValueGenerationStrategy] as InterbaseValueGenerationStrategy?;
+			if (valueGenerationStrategy == InterbaseValueGenerationStrategy.SequenceTrigger)
 			{
 				_behavior.CreateSequenceTriggerForColumn(column.Name, column.Table, column.Schema, Options, builder);
 			}
@@ -74,7 +74,7 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 	}
 
 	protected override void Generate(RenameTableOperation operation, IModel model, MigrationCommandListBuilder builder)
-		=> throw new NotSupportedException("Renaming table is not supported by Firebird.");
+		=> throw new NotSupportedException("Renaming table is not supported by Interbase.");
 
 	protected override void Generate(DropTableOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
 		=> base.Generate(operation, model, builder, terminate);
@@ -85,9 +85,9 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 
 	protected override void Generate(AlterColumnOperation operation, IModel model, MigrationCommandListBuilder builder)
 	{
-		var valueGenerationStrategy = operation[FbAnnotationNames.ValueGenerationStrategy] as FbValueGenerationStrategy?;
-		var oldValueGenerationStrategy = operation.OldColumn[FbAnnotationNames.ValueGenerationStrategy] as FbValueGenerationStrategy?;
-		if (oldValueGenerationStrategy == FbValueGenerationStrategy.IdentityColumn && valueGenerationStrategy != FbValueGenerationStrategy.IdentityColumn)
+		var valueGenerationStrategy = operation[InterbaseAnnotationNames.ValueGenerationStrategy] as InterbaseValueGenerationStrategy?;
+		var oldValueGenerationStrategy = operation.OldColumn[InterbaseAnnotationNames.ValueGenerationStrategy] as InterbaseValueGenerationStrategy?;
+		if (oldValueGenerationStrategy == InterbaseValueGenerationStrategy.IdentityColumn && valueGenerationStrategy != InterbaseValueGenerationStrategy.IdentityColumn)
 		{
 			throw new InvalidOperationException("Cannot remove identity from column.");
 
@@ -100,7 +100,7 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 			//builder.Append(" DROP IDENTITY");
 			//TerminateStatement(builder);
 		}
-		if (oldValueGenerationStrategy == FbValueGenerationStrategy.SequenceTrigger && valueGenerationStrategy != FbValueGenerationStrategy.SequenceTrigger)
+		if (oldValueGenerationStrategy == InterbaseValueGenerationStrategy.SequenceTrigger && valueGenerationStrategy != InterbaseValueGenerationStrategy.SequenceTrigger)
 		{
 			_behavior.DropSequenceTriggerForColumn(operation.Name, operation.Table, operation.Schema, Options, builder);
 		}
@@ -127,7 +127,7 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 			var type = GetColumnType(operation.Schema, operation.Table, operation.Name, operation, model);
 			builder.Append(type);
 		}
-		if (valueGenerationStrategy == FbValueGenerationStrategy.IdentityColumn)
+		if (valueGenerationStrategy == InterbaseValueGenerationStrategy.IdentityColumn)
 		{
 			builder.Append(" GENERATED BY DEFAULT AS IDENTITY");
 		}
@@ -161,7 +161,7 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 			TerminateStatement(builder);
 		}
 
-		if (valueGenerationStrategy == FbValueGenerationStrategy.SequenceTrigger)
+		if (valueGenerationStrategy == InterbaseValueGenerationStrategy.SequenceTrigger)
 		{
 			_behavior.CreateSequenceTriggerForColumn(operation.Name, operation.Table, operation.Schema, Options, builder);
 		}
@@ -230,7 +230,7 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 			TerminateStatement(builder);
 	}
 	protected override void Generate(RenameIndexOperation operation, IModel model, MigrationCommandListBuilder builder)
-		=> throw new NotSupportedException("Renaming index is not supported by Firebird.");
+		=> throw new NotSupportedException("Renaming index is not supported by Interbase.");
 
 
 	protected override void Generate(CreateSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
@@ -263,7 +263,7 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 	}
 
 	protected override void Generate(RenameSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
-		=> throw new NotSupportedException("Renaming sequence is not supported by Firebird.");
+		=> throw new NotSupportedException("Renaming sequence is not supported by Interbase.");
 
 	protected override void Generate(DropSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
 		=> base.Generate(operation, model, builder);
@@ -298,27 +298,27 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 
 
 	protected override void Generate(DropSchemaOperation operation, IModel model, MigrationCommandListBuilder builder)
-		=> throw new NotSupportedException("Schemas are not supported by Firebird.");
+		=> throw new NotSupportedException("Schemas are not supported by Interbase.");
 
 	protected override void Generate(EnsureSchemaOperation operation, IModel model, MigrationCommandListBuilder builder)
-		=> throw new NotSupportedException("Schemas are not supported by Firebird.");
+		=> throw new NotSupportedException("Schemas are not supported by Interbase.");
 
 
-	public virtual void Generate(FbCreateDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
+	public virtual void Generate(InterbaseCreateDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
 	{
 		if (Options.HasFlag(MigrationsSqlGenerationOptions.Script))
 			throw new NotSupportedException("Creating database from script is not supported.");
 
-		FbConnection.CreateDatabase(operation.ConnectionString);
+		InterbaseConnection.CreateDatabase(operation.ConnectionString);
 	}
 
-	public virtual void Generate(FbDropDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
+	public virtual void Generate(InterbaseDropDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
 	{
 		if (Options.HasFlag(MigrationsSqlGenerationOptions.Script))
 			throw new NotSupportedException("Dropping database from script is not supported.");
 
-		FbConnection.ClearPool(operation.ConnectionString);
-		FbConnection.DropDatabase(operation.ConnectionString);
+		InterbaseConnection.ClearPool(operation.ConnectionString);
+		InterbaseConnection.DropDatabase(operation.ConnectionString);
 	}
 
 	protected override void ColumnDefinition(string schema, string table, string name, ColumnOperation operation, IModel model, MigrationCommandListBuilder builder)
@@ -327,8 +327,8 @@ public class FbMigrationsSqlGenerator : MigrationsSqlGenerator
 			   .Append(" ")
 			   .Append(operation.ColumnType ?? GetColumnType(schema, table, name, operation, model));
 
-		var valueGenerationStrategy = operation[FbAnnotationNames.ValueGenerationStrategy] as FbValueGenerationStrategy?;
-		if (valueGenerationStrategy == FbValueGenerationStrategy.IdentityColumn)
+		var valueGenerationStrategy = operation[InterbaseAnnotationNames.ValueGenerationStrategy] as InterbaseValueGenerationStrategy?;
+		if (valueGenerationStrategy == InterbaseValueGenerationStrategy.IdentityColumn)
 		{
 			builder.Append(" GENERATED BY DEFAULT AS IDENTITY");
 		}

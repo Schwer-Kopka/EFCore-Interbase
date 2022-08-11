@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,16 +18,16 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Expressions.Internal;
-using FirebirdSql.EntityFrameworkCore.Firebird.Query.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Expressions.Internal;
+using SK.EntityFrameworkCore.Interbase.Query.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Query.ExpressionTranslators.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Query.ExpressionTranslators.Internal;
 
-public class FbDateOnlyPartComponentTranslator : IMemberTranslator
+public class InterbaseDateOnlyPartComponentTranslator : IMemberTranslator
 {
 	const string YearDayPart = "YEARDAY";
 	static readonly Dictionary<MemberInfo, string> MemberMapping = new Dictionary<MemberInfo, string>
@@ -39,11 +39,11 @@ public class FbDateOnlyPartComponentTranslator : IMemberTranslator
 			{  typeof(DateOnly).GetProperty(nameof(DateOnly.DayOfWeek)), "WEEKDAY" },
 		};
 
-	readonly FbSqlExpressionFactory _fbSqlExpressionFactory;
+	readonly InterbaseSqlExpressionFactory _interbaseSqlExpressionFactory;
 
-	public FbDateOnlyPartComponentTranslator(FbSqlExpressionFactory fbSqlExpressionFactory)
+	public InterbaseDateOnlyPartComponentTranslator(InterbaseSqlExpressionFactory interbaseSqlExpressionFactory)
 	{
-		_fbSqlExpressionFactory = fbSqlExpressionFactory;
+		_interbaseSqlExpressionFactory = interbaseSqlExpressionFactory;
 	}
 
 	public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -51,15 +51,15 @@ public class FbDateOnlyPartComponentTranslator : IMemberTranslator
 		if (!MemberMapping.TryGetValue(member, out var part))
 			return null;
 
-		var result = (SqlExpression)_fbSqlExpressionFactory.SpacedFunction(
+		var result = (SqlExpression)_interbaseSqlExpressionFactory.SpacedFunction(
 			"EXTRACT",
-			new[] { _fbSqlExpressionFactory.Fragment(part), _fbSqlExpressionFactory.Fragment("FROM"), instance },
+			new[] { _interbaseSqlExpressionFactory.Fragment(part), _interbaseSqlExpressionFactory.Fragment("FROM"), instance },
 			true,
 			new[] { false, false, true },
 			typeof(int));
 		if (part == YearDayPart)
 		{
-			result = _fbSqlExpressionFactory.Add(result, _fbSqlExpressionFactory.Constant(1));
+			result = _interbaseSqlExpressionFactory.Add(result, _interbaseSqlExpressionFactory.Constant(1));
 		}
 		return result;
 	}

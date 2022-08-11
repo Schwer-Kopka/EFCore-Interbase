@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -18,13 +18,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using FirebirdSql.Data.FirebirdClient;
+using SK.InterbaseLibraryAdapter;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;
 
-public class FbTypeMappingSource : RelationalTypeMappingSource
+public class InterbaseTypeMappingSource : RelationalTypeMappingSource
 {
 	public const int BinaryMaxSize = Int32.MaxValue;
 	public const int UnicodeVarcharMaxSize = VarcharMaxSize / 4;
@@ -32,36 +32,36 @@ public class FbTypeMappingSource : RelationalTypeMappingSource
 	public const int DefaultDecimalPrecision = 18;
 	public const int DefaultDecimalScale = 2;
 
-	readonly FbBoolTypeMapping _boolean = new FbBoolTypeMapping();
+	readonly InterbaseBoolTypeMapping _boolean = new InterbaseBoolTypeMapping();
 
 	readonly ShortTypeMapping _smallint = new ShortTypeMapping("SMALLINT", DbType.Int16);
 	readonly IntTypeMapping _integer = new IntTypeMapping("INTEGER", DbType.Int32);
 	readonly LongTypeMapping _bigint = new LongTypeMapping("BIGINT", DbType.Int64);
 
-	readonly FbStringTypeMapping _char = new FbStringTypeMapping("CHAR", DbType.StringFixedLength, FbDbType.Char);
-	readonly FbStringTypeMapping _varchar = new FbStringTypeMapping("VARCHAR", DbType.String, FbDbType.VarChar);
-	readonly FbStringTypeMapping _clob = new FbStringTypeMapping("BLOB SUB_TYPE TEXT", DbType.String, FbDbType.Text);
+	readonly InterbaseStringTypeMapping _char = new InterbaseStringTypeMapping("CHAR", DbType.StringFixedLength, InterbaseDbType.Char);
+	readonly InterbaseStringTypeMapping _varchar = new InterbaseStringTypeMapping("VARCHAR", DbType.String, InterbaseDbType.VarChar);
+	readonly InterbaseStringTypeMapping _clob = new InterbaseStringTypeMapping("BLOB SUB_TYPE TEXT", DbType.String, InterbaseDbType.Text);
 
-	readonly FbByteArrayTypeMapping _binary = new FbByteArrayTypeMapping();
+	readonly InterbaseByteArrayTypeMapping _binary = new InterbaseByteArrayTypeMapping();
 
 	readonly FloatTypeMapping _float = new FloatTypeMapping("FLOAT");
 	readonly DoubleTypeMapping _double = new DoubleTypeMapping("DOUBLE PRECISION");
 	readonly DecimalTypeMapping _decimal = new DecimalTypeMapping($"DECIMAL({DefaultDecimalPrecision},{DefaultDecimalScale})");
 
-	readonly FbDateTimeTypeMapping _timestamp = new FbDateTimeTypeMapping("TIMESTAMP", FbDbType.TimeStamp);
-	readonly FbDateTimeTypeMapping _date = new FbDateTimeTypeMapping("DATE", FbDbType.Date);
-	readonly FbDateOnlyTypeMapping _dateOnly = new FbDateOnlyTypeMapping("DATE");
+	readonly InterbaseDateTimeTypeMapping _timestamp = new InterbaseDateTimeTypeMapping("TIMESTAMP", InterbaseDbType.TimeStamp);
+	readonly InterbaseDateTimeTypeMapping _date = new InterbaseDateTimeTypeMapping("DATE", InterbaseDbType.Date);
+	readonly InterbaseDateOnlyTypeMapping _dateOnly = new InterbaseDateOnlyTypeMapping("DATE");
 
-	readonly FbTimeSpanTypeMapping _timeSpan = new FbTimeSpanTypeMapping("TIME", FbDbType.Time);
-	readonly FbTimeOnlyTypeMapping _timeOnly = new FbTimeOnlyTypeMapping("TIME");
+	readonly InterbaseTimeSpanTypeMapping _timeSpan = new InterbaseTimeSpanTypeMapping("TIME", InterbaseDbType.Time);
+	readonly InterbaseTimeOnlyTypeMapping _timeOnly = new InterbaseTimeOnlyTypeMapping("TIME");
 
-	readonly FbGuidTypeMapping _guid = new FbGuidTypeMapping();
+	readonly InterbaseGuidTypeMapping _guid = new InterbaseGuidTypeMapping();
 
 	readonly Dictionary<string, RelationalTypeMapping> _storeTypeMappings;
 	readonly Dictionary<Type, RelationalTypeMapping> _clrTypeMappings;
 	readonly HashSet<string> _disallowedMappings;
 
-	public FbTypeMappingSource(TypeMappingSourceDependencies dependencies, RelationalTypeMappingSourceDependencies relationalDependencies)
+	public InterbaseTypeMappingSource(TypeMappingSourceDependencies dependencies, RelationalTypeMappingSourceDependencies relationalDependencies)
 		: base(dependencies, relationalDependencies)
 	{
 		_storeTypeMappings = new Dictionary<string, RelationalTypeMapping>(StringComparer.OrdinalIgnoreCase)
@@ -181,11 +181,11 @@ public class FbTypeMappingSource : RelationalTypeMappingSource
 				{
 					if (!isFixedLength)
 					{
-						return new FbStringTypeMapping($"VARCHAR({size})", DbType.String, FbDbType.VarChar, size, isUnicode);
+						return new InterbaseStringTypeMapping($"VARCHAR({size})", DbType.String, InterbaseDbType.VarChar, size, isUnicode);
 					}
 					else
 					{
-						return new FbStringTypeMapping($"CHAR({size})", DbType.StringFixedLength, FbDbType.Char, size, isUnicode);
+						return new InterbaseStringTypeMapping($"CHAR({size})", DbType.StringFixedLength, InterbaseDbType.Char, size, isUnicode);
 					}
 				}
 			}

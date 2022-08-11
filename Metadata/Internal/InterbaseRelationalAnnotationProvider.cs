@@ -1,4 +1,4 @@
-﻿/*
+/*
  *    The contents of this file are subject to the Initial
  *    Developer's Public License Version 1.0 (the "License");
  *    you may not use this file except in compliance with the
@@ -21,12 +21,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace FirebirdSql.EntityFrameworkCore.Firebird.Metadata.Internal;
+namespace SK.EntityFrameworkCore.Interbase.Metadata.Internal;
 
-public class FbRelationalAnnotationProvider : RelationalAnnotationProvider
+public class InterbaseRelationalAnnotationProvider : RelationalAnnotationProvider
 {
 #pragma warning disable EF1001
-	public FbRelationalAnnotationProvider(RelationalAnnotationProviderDependencies dependencies)
+	public InterbaseRelationalAnnotationProvider(RelationalAnnotationProviderDependencies dependencies)
 #pragma warning restore EF1001
 			: base(dependencies)
 	{ }
@@ -39,13 +39,13 @@ public class FbRelationalAnnotationProvider : RelationalAnnotationProvider
 		}
 
 		var property = column.PropertyMappings.Select(x => x.Property)
-			.FirstOrDefault(x => x.GetValueGenerationStrategy() != FbValueGenerationStrategy.None);
+			.FirstOrDefault(x => x.GetValueGenerationStrategy() != InterbaseValueGenerationStrategy.None);
 		if (property != null)
 		{
 			var valueGenerationStrategy = property.GetValueGenerationStrategy();
-			if (valueGenerationStrategy != FbValueGenerationStrategy.None)
+			if (valueGenerationStrategy != InterbaseValueGenerationStrategy.None)
 			{
-				yield return new Annotation(FbAnnotationNames.ValueGenerationStrategy, valueGenerationStrategy);
+				yield return new Annotation(InterbaseAnnotationNames.ValueGenerationStrategy, valueGenerationStrategy);
 			}
 		}
 	}

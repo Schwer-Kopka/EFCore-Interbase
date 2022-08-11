@@ -19,6 +19,6 @@ namespace SK.EntityFrameworkCore.Interbase.Metadata.Internal;
 
 public static class InterbaseAnnotationNames
 {
-	public const string Prefix = "Fb:";
+	public const string Prefix = "IB:";
 	public const string ValueGenerationStrategy = Prefix + nameof(ValueGenerationStrategy);
 }

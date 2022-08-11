@@ -21,7 +21,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using SK.InterbaseLibraryAdapter;
-using FirebirdSql.Data.Services;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Scaffolding;

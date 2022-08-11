@@ -18,7 +18,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using SK.InterbaseLibraryAdapter;
 using SK.EntityFrameworkCore.Interbase.Infrastructure.Internal;
 using SK.EntityFrameworkCore.Interbase.Metadata;
 using SK.EntityFrameworkCore.Interbase.Metadata.Internal;

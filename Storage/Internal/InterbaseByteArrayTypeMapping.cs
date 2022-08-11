@@ -15,7 +15,7 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
-using SK.InterbaseLibraryAdapter;
+using System;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace SK.EntityFrameworkCore.Interbase.Storage.Internal;

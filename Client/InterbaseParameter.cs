@@ -22,7 +22,6 @@ using System.Data;
 using System.Data.Common;
 using System.ComponentModel;
 
-using SK.InterbaseLibraryAdapter;
 using System.Text;
 
 namespace SK.InterbaseLibraryAdapter;
@@ -421,6 +420,59 @@ public sealed class InterbaseParameter : DbParameter, ICloneable
 		var isAscii = string.IsNullOrWhiteSpace(parameterName)
 			|| Encoding.UTF8.GetByteCount(parameterName) == parameterName.Length;
 		return !isAscii;
+	}
+
+	#endregion
+
+
+	#region customizations
+
+	public string ValueAsInterbaseString
+	{
+		get
+		{
+			if (_value == null || _value == System.DBNull.Value)
+				return "NULL";
+
+			System.Data.DbType dbType = TypeHelper.GetDbTypeFromInterbaseDataType(_interbaseDbType);
+
+			string val;
+			bool needsQuoting = true;
+			switch (dbType)
+			{
+				case System.Data.DbType.String:
+					val = Convert.ToString(_value);
+					break;
+				case System.Data.DbType.DateTime:
+					val = Convert.ToDateTime(_value).ToString("yyyy-MM-dd HH:mm:ss.ffff");
+					break;
+				case System.Data.DbType.Int16:
+					val = Convert.ToString(Convert.ToInt16(_value));
+					needsQuoting = false;
+					break;
+				case System.Data.DbType.Int32:
+					val = Convert.ToString(Convert.ToInt32(_value));
+					needsQuoting = false;
+					break;
+				case System.Data.DbType.Int64:
+					val = Convert.ToString(Convert.ToInt64(_value));
+					needsQuoting = false;
+					break;
+				case System.Data.DbType.Double:
+					var valAsDouble = Convert.ToDouble(_value);
+					val = valAsDouble.ToString(System.Globalization.CultureInfo.InvariantCulture);
+					break;
+				default:
+					throw new NotSupportedException("Value cannot be converted to dbtype " + dbType.ToString());
+			}
+
+			if (needsQuoting)
+			{
+				val = "\'" + val + "\'";
+			}
+
+			return val;
+		}
 	}
 
 	#endregion

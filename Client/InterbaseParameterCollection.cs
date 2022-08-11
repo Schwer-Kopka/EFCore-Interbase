@@ -19,15 +19,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 
-using SK.InterbaseLibraryAdapter;
 using System.Text;
-using System.Collections;
 
 namespace SK.InterbaseLibraryAdapter;
 
@@ -387,6 +386,13 @@ public sealed class InterbaseParameterCollection : DbParameterCollection
 	{
 		parameter.Parent = null;
 	}
+
+	#endregion
+
+
+	#region customizations
+
+	public IList<InterbaseParameter> ToList() => new List<InterbaseParameter>(_parameters);
 
 	#endregion
 }
